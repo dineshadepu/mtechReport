@@ -8,7 +8,7 @@
 
 %% Default spacing: 1.5
 %% Default font size: 12pt
-%% Default font: txfonts (similar to times new roman) 
+%% Default font: txfonts (similar to times new roman)
 
 %% Selectively comment out sections that you want to be left out but
 %% maintaining the page numbers and other \ref
@@ -16,7 +16,7 @@
   intro/introduction,
   lit/literature,
   expt/experimental,
-  rnd/results, 
+  rnd/results,
   dec,abs,pub,ack
 }
 
@@ -42,19 +42,19 @@
 
 
 \begin{document}
-	
+
 %%********************************Frontmatter***********************
-% In frontmatter everything comes with roman numbering	
+% In frontmatter everything comes with roman numbering
 \pagenumbering{roman}
 \setcounter{page}{1}
 
 %*******************************************************************
-%                         Title Page                            
+%                         Title Page
 %*******************************************************************
-\title{Essential \LaTeX\ Templates for Report Writing}
-\author{My name}
+\title{Smoothed Particle Hydrodynamics-Discrete Element Method Coupling}
+\author{Dinesh A}
 
-%% Print the date. Today's date comes by default, change it here to 
+%% Print the date. Today's date comes by default, change it here to
 %% other date format, if required:
 
 %\date{\today}
@@ -63,18 +63,18 @@
 
 %% The type of the report can be set here
 
-\reporttype{A Seminar Report}
-%\reporttype{A Thesis}
+% \reporttype{A Seminar Report}
+\reporttype{A Thesis}
 %\reporttype{A Dissertation}
 %\reporttype{A Project Report}
 
 %% Name of the degree
-\degree{Doctor of Philosophy}
-%\degree{Master of Technology}
+% \degree{Doctor of Philosophy}
+\degree{Master of Technology}
 
 
 %% Department/Centre Name
-\dept{Department of Chemical Engineering}
+\dept{Department of Aerospace Engineering}
 
 %% Supervisor and cosupervisor/excosupervisor are not essential parts
 %% of a report title page, as it is your report!
@@ -85,26 +85,26 @@
 %\excosupervisor{External Supervisor}
 
 %% Roll number
-\rollnum{Roll No. ....}
+\rollnum{Roll No. 153010009}
 
 \maketitle
 
 %*******************************************************************
-%                         Copyright Page                          
-%******************************************************************* 
-%\mycopyright                    
+%                         Copyright Page
+%*******************************************************************
+%\mycopyright
 
 %*******************************************************************
-%                         Dedication Page                         
+%                         Dedication Page
 %*******************************************************************
-\dedication[Dedicated to \ldots]        
+\dedication[Dedicated to \ldots]
 %\addintoc{Dedication}
 
 %*******************************************************************
-%                        Certificate Page                         
+%                        Certificate Page
 %*******************************************************************
-%\makecertificate[change title name]{report type} 
-\makecertificate{seminar report} 
+%\makecertificate[change title name]{report type}
+\makecertificate{seminar report}
 %\makecertificate{thesis}
 %\makecertificate{dissertation}
 %\makecertificate{project report}
@@ -112,72 +112,72 @@
 %\addintoc{Certificate}
 
 %*******************************************************************
-%                         Approval Sheet                         
+%                         Approval Sheet
 %*******************************************************************
 %\makeapproval{thesis}
 %\makeapproval{dissertation}
 
 %*******************************************************************
-%                          Declaration                           
+%                          Declaration
 %*******************************************************************
-\include{dec} 
+\include{dec}
 %\addintoc{Declaration}
 
 %******************************************************************
-%                          Abstract                             
-%******************************************************************  
-\include{abs}                    
+%                          Abstract
+%******************************************************************
+\include{abs}
 
 %******************************************************************
-%                         Contents list                         
+%                         Contents list
 %******************************************************************
 %\figurespagefalse
 %\tablespagefalse
 \makecontents % Creats toc, lof, and lot
 
 %******************************************************************
-%                        Notations                              
+%                        Notations
 %******************************************************************
-\notations[4cm]{List of Symbols}      
+\notations[4cm]{List of Symbols}
 
 %%********************************Mainmatter***********************
-% In mainmatter everything comes with arabic numbering	
+% In mainmatter everything comes with arabic numbering
 \cleardoublepage
 \setcounter{page}{1}
 \pagenumbering{arabic}
 
 %******************************************************************
-%                         Chapters                           
-%****************************************************************** 
+%                         Chapters
+%******************************************************************
 \include{intro/introduction}
 \include{lit/literature}
 \include{expt/experimental}
 \include{rnd/results}
 
 %****************************************************************
-%                         Appendices                           
+%                         Appendices
 %****************************************************************
 %% Additional, supporting material, such as codes, derivations, etc., can be placed in the appendix
 \appendix
 \chapter{Supporting Material}
 
 %******************************************************************
-%                         Bibliography or References          
-%******************************************************************  
-\bibliography{mylit}     
-
-%*******************************************************************
-%                         List of publications               
+%                         Bibliography or References
 %******************************************************************
-\include{pub}            
+\bibliography{mylit}
 
 %*******************************************************************
-%                        Acknowledgements                    
-%******************************************************************* 
-\include{ack}           
+%                         List of publications
+%******************************************************************
+\include{pub}
 
 %*******************************************************************
-%                        About author                    
+%                        Acknowledgements
+%*******************************************************************
+\include{ack}
+
+%*******************************************************************
+%                        About author
 %*******************************************************************
 \colophon % remove this command while using this file.
 
@@ -185,7 +185,7 @@
 %*******************************************************************
 \end{document}
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-master: t
-%%% End: 
+%%% End:
