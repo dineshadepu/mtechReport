@@ -1,6 +1,4 @@
-
 \newcommand{\etas}{\ensuremath{\eta_{\mathrm{s}}}}
-
 
 \chapter{Introduction}
 
@@ -53,12 +51,12 @@ Equation~\eqref{eq:sinx} is the integral of the cosine
 function. Mathematical symbols must always be put inside \verb|$$|,
 when they appear outside a math environment (such as \verb|equation|,
 \verb|align|, \verb|gather|, etc).  The symbol ``ex'' must be written as
-$x$ and not as x.  
+$x$ and not as x.
 
 Another commonly used construct for equations is the \verb|align|
 environment to align several equations along a vertical line. It is
 usually the $=$ sign across which the alignment is done.  The
-point of alignment for each equation is specified using the ampersand symbol 
+point of alignment for each equation is specified using the ampersand symbol
 \begin{align}
 a &= b  \\
 a + e + f + g & = m + n + z \\
@@ -76,17 +74,17 @@ a mathematical equation as $\etas = \eta \, ( 1 + \phi)$.
 %%
 %
 
-\section{How to write nomenclature} 
+\section{How to write nomenclature}
 
 \subsection{General guidelines:}
-\begin{enumerate}	
-	\item Use \verb|\nomenclature[prefix]{symbol}{description}| for symbols, the best place for this command is immediately after you introduce the symbol for the first time
-	\item Shorten the long command:\\ \verb|\newcommand{\nm}[2]{\nomenclature{#1}{#2}}|
-	\item Create compiler for nomenclature with the given code: \\
-	\textbf{makeindex \%.nlo -s nomencl.ist -o \%.nls -t \%.nlg }\\
-	For TeXstudio: go to options > build > user command > write- `user1: Nomenclature' amd paste the above code\\
-	For compiling the nomenclature: go to tools > user > Nomenclature	
-\end{enumerate}	
+\begin{enumerate}
+        \item Use \verb|\nomenclature[prefix]{symbol}{description}| for symbols, the best place for this command is immediately after you introduce the symbol for the first time
+        \item Shorten the long command:\\ \verb|\newcommand{\nm}[2]{\nomenclature{#1}{#2}}|
+        \item Create compiler for nomenclature with the given code: \\
+        \textbf{makeindex \%.nlo -s nomencl.ist -o \%.nls -t \%.nlg }\\
+        For TeXstudio: go to options > build > user command > write- `user1: Nomenclature' amd paste the above code\\
+        For compiling the nomenclature: go to tools > user > Nomenclature
+\end{enumerate}
 
 \subsection{Grouped nomenclature}
 \begin{enumerate}
@@ -99,7 +97,7 @@ a mathematical equation as $\etas = \eta \, ( 1 + \phi)$.
  \item For superscripts, use:\\
  \verb|\nmS[sorting letter]{symbol}{descritpon}|
  \item For subscripts, use:\\
- \verb|\nms[sorting letter]{symbol}{descritpon}| 
+ \verb|\nms[sorting letter]{symbol}{descritpon}|
  \item For any other symbol, use:\\
  \verb|\nmX[sorting letter]{symbol}{descritpon}|\\
  Name of other symbols can be changed with \verb|\OtherSym{Name of symbols}|
@@ -120,7 +118,7 @@ a mathematical equation as $\etas = \eta \, ( 1 + \phi)$.
 \item \verb|\nms[i]{$i$}{Indices}|
 \item \verb|\nms[x]{$x$}{Variable in x-direction}|
 \item \verb|\nmX[f]{foo}{foo|
-\end{enumerate} 
+\end{enumerate}
 
 \nmA[FF]{FFA}{Free fatty acid}
 \nmA[AO]{AOR}{Angle of repose}
@@ -150,7 +148,7 @@ a mathematical equation as $\etas = \eta \, ( 1 + \phi)$.
 %%
 
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../mainrep"
-%%% End: 
+%%% End:
