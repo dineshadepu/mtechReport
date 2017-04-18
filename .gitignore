@@ -304,23 +304,26 @@ docs/_build/
       /source-dist.tmp
       /source-dist.tmp1
 
-     *.exe
-     *.dll
-     *.dwo
-     *.do
-     *.o
-     *.obj
-     *.so
-     *.dylib
-     *.dSYM
-     *.jl.cov
-     *.jl.*.cov
-     *.jl.mem
-     *.ji
+# files
+*.exe
+*.dll
+*.dwo
+*.do
+*.o
+*.obj
+*.so
+*.dylib
+*.dSYM
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
+*.ji
 
-     .DS_Store
+.DS_Store
 
-     *.png
-     *.hdf5
-     *.pdf
-     *.nlo
+*.png
+*.hdf5
+*.pdf
+*.nlo
+*.un~
+*_output/
