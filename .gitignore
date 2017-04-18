@@ -322,3 +322,5 @@ docs/_build/
 
      *.png
      *.hdf5
+     *.pdf
+     *.nlo
