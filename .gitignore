@@ -34,179 +34,179 @@ sph_dem_report.pdf
 
 ## Build tool auxiliary files:
 *.fdb_latexmk
-*.synctex
+    *.synctex
 *.synctex(busy)
-*.synctex.gz
+    *.synctex.gz
 *.synctex.gz(busy)
-*.pdfsync
+    *.pdfsync
 
 ## Auxiliary and intermediate files from other packages:
 # algorithms
-*.alg
-*.loa
+    *.alg
+    *.loa
 
 # achemso
-acs-*.bib
+    acs-*.bib
 
 # amsthm
-*.thm
+    *.thm
 
 # beamer
-*.nav
-*.snm
-*.vrb
+    *.nav
+    *.snm
+    *.vrb
 
 # cprotect
-*.cpt
+    *.cpt
 
 # fixme
-*.lox
+    *.lox
 
 #(r)(e)ledmac/(r)(e)ledpar
-*.end
-*.?end
-*.[1-9]
-*.[1-9][0-9]
-*.[1-9][0-9][0-9]
-*.[1-9]R
-*.[1-9][0-9]R
-*.[1-9][0-9][0-9]R
-*.eledsec[1-9]
-*.eledsec[1-9]R
-*.eledsec[1-9][0-9]
-*.eledsec[1-9][0-9]R
-*.eledsec[1-9][0-9][0-9]
-*.eledsec[1-9][0-9][0-9]R
+    *.end
+    *.?end
+    *.[1-9]
+    *.[1-9][0-9]
+    *.[1-9][0-9][0-9]
+    *.[1-9]R
+    *.[1-9][0-9]R
+    *.[1-9][0-9][0-9]R
+    *.eledsec[1-9]
+    *.eledsec[1-9]R
+    *.eledsec[1-9][0-9]
+    *.eledsec[1-9][0-9]R
+    *.eledsec[1-9][0-9][0-9]
+    *.eledsec[1-9][0-9][0-9]R
 
 # glossaries
-*.acn
-*.acr
-*.glg
-*.glo
-*.gls
-*.glsdefs
+    *.acn
+    *.acr
+    *.glg
+    *.glo
+    *.gls
+    *.glsdefs
 
 # gnuplottex
-*-gnuplottex-*
+    *-gnuplottex-*
 
 # gregoriotex
-*.gaux
-*.gtex
+    *.gaux
+    *.gtex
 
 # hyperref
-*.brf
+    *.brf
 
 # knitr
-*-concordance.tex
+    *-concordance.tex
 # TODO Comment the next line if you want to keep your tikz graphics files
-*.tikz
-*-tikzDictionary
+    *.tikz
+    *-tikzDictionary
 
 # listings
-*.lol
+    *.lol
 
 # makeidx
-*.idx
-*.ilg
-*.ind
-*.ist
+    *.idx
+    *.ilg
+    *.ind
+    *.ist
 
 # minitoc
-*.maf
-*.mlf
-*.mlt
-*.mtc
-*.mtc[0-9]
-*.mtc[1-9][0-9]
+    *.maf
+    *.mlf
+    *.mlt
+    *.mtc
+    *.mtc[0-9]
+    *.mtc[1-9][0-9]
 
 # minted
-_minted*
-*.pyg
+    _minted*
+    *.pyg
 
 # morewrites
-*.mw
+    *.mw
 
 # mylatexformat
-*.fmt
+    *.fmt
 
 # nomencl
-*.nlo
+    *.nlo
 
 # sagetex
-*.sagetex.sage
-*.sagetex.py
-*.sagetex.scmd
+    *.sagetex.sage
+    *.sagetex.py
+    *.sagetex.scmd
 
 # scrwfile
-*.wrt
+    *.wrt
 
 # sympy
-*.sout
-*.sympy
-sympy-plots-for-*.tex/
+    *.sout
+    *.sympy
+    sympy-plots-for-*.tex/
 
 # pdfcomment
-*.upa
-*.upb
+    *.upa
+    *.upb
 
 # pythontex
-*.pytxcode
-pythontex-files-*/
+    *.pytxcode
+    pythontex-files-*/
 
 # thmtools
-*.loe
+    *.loe
 
 # TikZ & PGF
-*.dpth
-*.md5
-*.auxlock
+    *.dpth
+    *.md5
+    *.auxlock
 
 # todonotes
-*.tdo
+    *.tdo
 
 # easy-todo
-*.lod
+    *.lod
 
 # xindy
-*.xdy
+    *.xdy
 
 # xypic precompiled matrices
-*.xyc
+    *.xyc
 
 # endfloat
-*.ttt
-*.fff
+    *.ttt
+    *.fff
 
 # Latexian
-TSWLatexianTemp*
+    TSWLatexianTemp*
 
 ## Editors:
 # WinEdt
-*.bak
-*.sav
+    *.bak
+    *.sav
 
 # Texpad
-.texpadtmp
+    .texpadtmp
 
 # Kile
-*.backup
+    *.backup
 
 # KBibTeX
-*~[0-9]*
+    *~[0-9]*
 
-# auto folder when using emacs and auctex 
-/auto/*
-*.tex#
+# auto folder when using emacs and auctex
+    /auto/*
+          *.tex#
 
 
-*.pdf
+          *.pdf
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
-*$py.class
+          *.py[cod]
+          *$py.class
 
 # C extensions
-*.so
+          *.so
 
 # Distribution / packaging
 .Python
@@ -223,15 +223,15 @@ parts/
 sdist/
 var/
 wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+          *.egg-info/
+          .installed.cfg
+          *.egg
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+          *.manifest
+          *.spec
 
 # Installer logs
 pip-log.txt
@@ -245,16 +245,16 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
-*,cover
-.hypothesis/
+          *,cover
+          .hypothesis/
 
 # Translations
-*.mo
-*.pot
+          *.mo
+          *.pot
 
 # Django stuff:
-*.log
-local_settings.py
+          *.log
+          local_settings.py
 
 # Flask stuff:
 instance/
@@ -267,57 +267,58 @@ instance/
 docs/_build/
 
 # PyBuilder
-target/
+    target/
 
 # Jupyter Notebook
-.ipynb_checkpoints
+    .ipynb_checkpoints
 
 # pyenv
-.python-version
+    .python-version
 
 # celery beat schedule file
-celerybeat-schedule
+    celerybeat-schedule
 
 # dotenv
-.env
+    .env
 
 # virtualenv
-.venv/
-venv/
-ENV/
+    .venv/
+    venv/
+    ENV/
 
 # Spyder project settings
-.spyderproject
+    .spyderproject
 
 # Rope project settings
-.ropeproject
+    .ropeproject
 
-/*.tar.gz
-/tmp
-/dist
-/dist-extras
-/julia
-/usr
-/usr-staging
-/Make.user
-/julia-*
-/source-dist.tmp
-/source-dist.tmp1
+    /*.tar.gz
+      /tmp
+      /dist
+      /dist-extras
+      /julia
+      /usr
+      /usr-staging
+      /Make.user
+      /julia-*
+      /source-dist.tmp
+      /source-dist.tmp1
 
-*.exe
-*.dll
-*.dwo
-*.do
-*.o
-*.obj
-*.so
-*.dylib
-*.dSYM
-*.jl.cov
-*.jl.*.cov
-*.jl.mem
-*.ji
+     *.exe
+     *.dll
+     *.dwo
+     *.do
+     *.o
+     *.obj
+     *.so
+     *.dylib
+     *.dSYM
+     *.jl.cov
+     *.jl.*.cov
+     *.jl.mem
+     *.ji
 
-.DS_Store
+     .DS_Store
 
-*.png
+     *.png
+     *.hdf5
