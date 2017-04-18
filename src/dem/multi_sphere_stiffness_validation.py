@@ -25,35 +25,32 @@ gz = -9.8
 hdx = 1.0
 
 
-def create_ball(x_c, y_c, radius, points):
-    """Given radius of big sphere, this function discretizes it into many
-small spheres, Returns x, y numpy arrays, with corresponding radius
-
-    """
-    x = np.linspace(x_c - radius, x_c + radius, points)
-    y = np.linspace(y_c - radius, y_c + radius, points)
+def create_rectangle(xc, yc, length, height, points):
+    x = np.linspace(-length / 2., length / 2., points)
+    y = np.linspace(-height / 2., height / 2., points)
 
     # Find radius of single sphere in discretized body
-    _rad1 = x[2] - x[1]
-    _rad = _rad1/2
+    _rad = (x[2] - x[1]) / 2.
 
     # get the grid
     x, y = np.meshgrid(x, y)
     x, y = x.ravel(), y.ravel()
 
-    # get the indices outside circle
-    indices = []
-    for i in range(len(x)):
-        if (x_c - x[i])**2 + (y_c - y[i])**2 > radius**2:
-            indices.append(i)
+    # move to to respective position in space
+    x = x + xc
+    y = y + yc
 
-    # delete the indices outside circle
-    x = np.delete(x, indices)
-    y = np.delete(y, indices)
+    return x, y, _rad
 
-    # assign radius for each particle in body
-    # rad = np.ones_like(x) * _rad
 
+def create_floor():
+    y = np.linspace(-0.1, -0.5, 3)
+    x = np.linspace(0, 300*1e-2, 16)
+
+    x, y = np.meshgrid(x, y)
+
+    x, y = x.ravel(), y.ravel()
+    _rad = 10 * 1e-2
     return x, y, _rad
 
 
@@ -64,7 +61,7 @@ def add_properties(pa, *props):
 
 class BallBouncing(Application):
     def initialize(self):
-        self.kn = 1e5
+        self.kn = 1e7
         self.en = 0.9
         self.rad = 10 * 1e-2
         self.rho = 2.7 * 1e3
@@ -79,7 +76,8 @@ class BallBouncing(Application):
         self.dt = t_c / t_c * 1e-4
 
     def create_particles(self):
-        xb, yb, _rad = create_ball(0., 0.5, 0.1, 30)
+        xb, yb, _rad = create_rectangle(150 * 1e-2, 150 * 1e-2, 200 * 1e-2, 200
+                                        * 1e-2, 10)
         _m = np.pi * _rad**2 * self.rho
         m = np.ones_like(xb) * _m
         h = np.ones_like(xb) * hdx * self.rad
@@ -88,7 +86,7 @@ class BallBouncing(Application):
             x=xb,
             y=yb,
             h=h,
-            m=m,)
+            m=m, )
 
         add_properties(ball, 'rad_s')
         # ball.rad_s[:] = 0.05 * 1e-2
@@ -105,9 +103,9 @@ class BallBouncing(Application):
             'tang_velocity_y',
             'tang_velocity_z', )
 
-        xt, yt, _rad = create_ball(0., -0.1, 0.1, 30)
+        xt, yt, _rad = create_floor()
         _m = np.pi * _rad**2 * self.rho
-        m = np.ones_like(xb) * _m
+        m = np.ones_like(xt) * _m
         h = np.ones_like(xt) * hdx * self.rad
         wall = get_particle_array_rigid_body(
             name='wall',
