@@ -21,14 +21,46 @@ This method has three parts
 As the first step, in order to integrate the particles, one needs to
 know the force acting on that particle.
 
-As the particles comes into contact, there are mainly two forces which act on them.
-One is conservative force aka spring force, and the other is non conservative force, which damps
-down the energy of the system.
+As the particles comes into contact, there are mainly two forces which
+act on them.  One is conservative force aka spring force, and the
+other is non conservative force, which damps down the energy of the
+system.
 % \begin{figure}[ht]
 %   \centering
 %   \includegraphics[]{figures/}
 %   \caption{\label{fig:label} }
 % \end{figure}
+
+
+\subsection{Conservative force or Spring force}
+
+As two particles come into contact, an equal and opposite repulsive
+force will act on each particle depending on the overlap amount. In
+DEM this force can be modelled using a linear or non linear model.
+
+
+Let a solid sphere be freely falling under gravity onto a flat floor.
+The trajectory of the sphere of the particle until it hits the floor
+can be computed with basic kinematics.
+
+As the sphere comes into contact of the flat floor, there will be a
+repulsive force on it. In computing this force, a linear force model
+assumes a linear relationship between the amount of overlap and the
+repulsive force as follows
+
+
+\begin{align}
+  \label{eq:linearForce}
+  \label{eq1}F \propto \delta_{ij}\\
+  \label{eq2}F = k * \delta_{ij}
+\end{align}
+
+
+to be in between the floor and sphere. Here $\delta_{ij}$ is the
+amount of overlap and k is the stiffness of the spring which is
+computed using properties of both the materials in contact.
+
+
 
 
 

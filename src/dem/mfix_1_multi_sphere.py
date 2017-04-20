@@ -19,8 +19,8 @@ from pysph.sph.rigid_body import (BodyForce, RigidBodyCollision,
                                   RigidBodyMoments, RigidBodyMotion,
                                   RK2StepRigidBody)
 dim = 2
-tf = 1
-gz = -9.8
+tf = 0.5
+gz = -9.81
 
 hdx = 1.0
 
@@ -35,7 +35,7 @@ small spheres, Returns x, y numpy arrays, with corresponding radius
 
     # Find radius of single sphere in discretized body
     _rad1 = x[2] - x[1]
-    _rad = _rad1/2
+    _rad = _rad1 / 2
 
     # get the grid
     x, y = np.meshgrid(x, y)
@@ -44,8 +44,9 @@ small spheres, Returns x, y numpy arrays, with corresponding radius
     # get the indices outside circle
     indices = []
     for i in range(len(x)):
-        if (x_c - x[i])**2 + (y_c - y[i])**2 > radius**2:
+        if (x_c - x[i])**2 + (y_c - y[i])**2 >= radius**2:
             indices.append(i)
+    print(indices)
 
     # delete the indices outside circle
     x = np.delete(x, indices)
@@ -64,7 +65,7 @@ def add_properties(pa, *props):
 
 class BallBouncing(Application):
     def initialize(self):
-        self.kn = 1e5
+        self.kn = 1e6
         self.en = 0.9
         self.rad = 10 * 1e-2
         self.rho = 2.7 * 1e3
@@ -79,7 +80,7 @@ class BallBouncing(Application):
         self.dt = t_c / t_c * 1e-4
 
     def create_particles(self):
-        xb, yb, _rad = create_ball(0., 0.5, 0.1, 30)
+        xb, yb, _rad = create_ball(0., 0.5 + 0.1 / 2, 0.1 / 2., 30)
         _m = np.pi * _rad**2 * self.rho
         m = np.ones_like(xb) * _m
         h = np.ones_like(xb) * hdx * self.rad
@@ -88,7 +89,7 @@ class BallBouncing(Application):
             x=xb,
             y=yb,
             h=h,
-            m=m,)
+            m=m, )
 
         add_properties(ball, 'rad_s')
         # ball.rad_s[:] = 0.05 * 1e-2
@@ -105,7 +106,7 @@ class BallBouncing(Application):
             'tang_velocity_y',
             'tang_velocity_z', )
 
-        xt, yt, _rad = create_ball(0., -0.1, 0.1, 30)
+        xt, yt, _rad = create_ball(0., 0.1 / 2., 0.1 / 2., 30)
         _m = np.pi * _rad**2 * self.rho
         m = np.ones_like(xb) * _m
         h = np.ones_like(xt) * hdx * self.rad
