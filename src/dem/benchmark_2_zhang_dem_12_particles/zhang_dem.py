@@ -20,7 +20,8 @@ from pysph.sph.rigid_body import (BodyForce, RigidBodyCollision,
                                   RigidBodyMoments, RigidBodyMotion,
                                   RK2StepRigidBody)
 dim = 2
-tf = 0.2
+tf = 1.
+wall_time = 0.5
 gz = -9.81
 
 hdx = 1.0
@@ -255,10 +256,10 @@ class BallBouncing(Application):
     def post_step(self, solver):
         t = solver.t
         dt = solver.dt
-        T = 0.1
+        T = wall_time
         if (T - dt / 2) < t < (T + dt / 2):
             for pa in self.particles:
-                if pa.name == 'temp_w':
+                if pa.name == 'temp_wall':
                     break
             pa.y += 8 * 1e-2
 
