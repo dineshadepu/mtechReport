@@ -211,7 +211,19 @@ class BallBouncing(Application):
         add_properties(wall, 'rad_s')
         wall.rad_s[:] = (0.5 * 1e-3)
 
-        return [ball, wall]
+        xtw, ytw = create_temp_wall()
+        m = np.ones_like(xtw) * _m
+        h = np.ones_like(xtw) * hdx * self.rad
+        temp_wall = get_particle_array_rigid_body(
+            name='temp_wall',
+            x=xtw,
+            y=ytw,
+            h=h,
+            m=m, )
+
+        add_properties(temp_wall, 'rad_s')
+        temp_wall.rad_s[:] = (0.5 * 1e-3)
+        return [ball, wall, temp_wall]
 
     def create_solver(self):
         print(self.gamma_n)
@@ -231,7 +243,7 @@ class BallBouncing(Application):
                 BodyForce(dest='ball', sources=None, gy=gz),
                 RigidBodyCollision(
                     dest='ball',
-                    sources=['wall', 'ball'],
+                    sources=['wall', 'ball', 'temp_wall'],
                     kn=self.kn,
                     gamma_n=self.gamma_n, )
             ]),
@@ -239,6 +251,16 @@ class BallBouncing(Application):
             Group(equations=[RigidBodyMotion(dest='ball', sources=None)]),
         ]
         return equations
+
+    def post_step(self, solver):
+        t = solver.t
+        dt = solver.dt
+        T = 0.1
+        if (T - dt / 2) < t < (T + dt / 2):
+            for pa in self.particles:
+                if pa.name == 'temp_w':
+                    break
+            pa.y += 8 * 1e-2
 
 
 if __name__ == '__main__':
