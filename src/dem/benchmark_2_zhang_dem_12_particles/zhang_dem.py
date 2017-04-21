@@ -20,13 +20,13 @@ from pysph.sph.rigid_body import (BodyForce, RigidBodyCollision,
                                   RigidBodyMoments, RigidBodyMotion,
                                   RK2StepRigidBody)
 dim = 2
-tf = 0.5
+tf = 0.2
 gz = -9.81
 
 hdx = 1.0
 
 
-def create_ball(x_c, y_c, radius, points):
+def create_ball(x_c, y_c, radius, points, rad=True):
     """Given radius of big sphere, this function discretizes it into many
 small spheres, Returns x, y numpy arrays, with corresponding radius
 
@@ -55,12 +55,15 @@ small spheres, Returns x, y numpy arrays, with corresponding radius
     # assign radius for each particle in body
     # rad = np.ones_like(x) * _rad
 
-    return x, y, _rad
+    if rad is True:
+        return x, y, _rad
+    else:
+        return x, y
 
 
 def create_boundary():
     x_b = np.arange(0, 260, 1)
-    y_b = np.arange(0, 10+1e-9, 1)
+    y_b = np.arange(0, 10 + 1e-9, 1)
     x_b, y_b = np.meshgrid(x_b, y_b)
     x_b, y_b = x_b.ravel(), y_b.ravel()
 
@@ -69,7 +72,7 @@ def create_boundary():
     x_l, y_l = np.meshgrid(x_l, y_l)
     x_l, y_l = x_l.ravel(), y_l.ravel()
 
-    x_r = np.arange(260, 270+1e-9, 1)
+    x_r = np.arange(260, 270 + 1e-9, 1)
     y_r = np.arange(0, 200, 1)
     x_r, y_r = np.meshgrid(x_r, y_r)
     x_r, y_r = x_r.ravel(), y_r.ravel()
@@ -77,7 +80,74 @@ def create_boundary():
     x = np.concatenate([x_l, x_b, x_r])
     y = np.concatenate([y_l, y_b, y_r])
 
-    return x*1e-3, y*1e-3
+    return x * 1e-3, y * 1e-3
+
+
+def create_six_layers(b=True):
+    points = 30
+    x1, y1 = create_ball(0.5 * 1e-2, 1.6 * 1e-2, 0.5 * 1e-2, points, rad=False)
+    # print(len(x1))
+    x2, y2 = x1 + 1 * 1e-2, y1
+    x3, y3 = x2 + 1 * 1e-2, y1
+    x4, y4 = x3 + 1 * 1e-2, y1
+    x5, y5 = x4 + 1 * 1e-2, y1
+    x6, y6 = x5 + 1 * 1e-2, y1
+
+    # Bottom first layer is done
+    x_six_bot, y_six_bot = np.concatenate(
+        [x1, x2, x3, x4, x5, x6]), np.concatenate([y1, y2, y3, y4, y5, y6])
+
+    x, y = x_six_bot, y_six_bot
+
+    # middle six cylinders
+    y_middle = y_six_bot + 2.2 * 1e-2
+    x, y = np.concatenate([x, x_six_bot]), np.concatenate([y, y_middle])
+
+    # top six cylinders
+    y_top = y_middle + 2.2 * 1e-2
+    x, y = np.concatenate([x, x_six_bot]), np.concatenate([y, y_top])
+
+    # Bottom first 5 cylinder layer
+    x1, y1 = create_ball(1 * 1e-2, 2.7 * 1e-2, 0.5 * 1e-2, points, rad=False)
+    x2, y2 = x1 + 1 * 1e-2, y1
+    x3, y3 = x2 + 1 * 1e-2, y1
+    x4, y4 = x3 + 1 * 1e-2, y1
+    x5, y5 = x4 + 1 * 1e-2, y1
+
+    y_five_bottom = np.concatenate([y1, y2, y3, y4, y5])
+    x_five_bottom = np.concatenate([x1, x2, x3, x4, x5])
+
+    x, y = np.concatenate([x, x_five_bottom]), np.concatenate(
+        [y, y_five_bottom])
+
+    # middle six cylinders
+    y_middle = y_five_bottom + 2.2 * 1e-2
+    x, y = np.concatenate([x, x_five_bottom]), np.concatenate([y, y_middle])
+
+    # top six cylinders
+    y_top = y_middle + 2.2 * 1e-2
+    x, y = np.concatenate([x, x_five_bottom]), np.concatenate([y, y_top])
+
+    # create body id
+    _b_id = np.ones_like(x1, dtype=int)
+    body_id = np.asarray([], dtype=int)
+    for i in range(33):
+        body_id = np.append(body_id, i * _b_id)
+
+    print((body_id))
+    print((x))
+    if b:
+        return x, y, body_id
+    else:
+        return x, y
+
+
+def create_temp_wall():
+    x_b = np.arange(61, 71, 1)
+    y_b = np.arange(11, 150, 1)
+    x_b, y_b = np.meshgrid(x_b, y_b)
+    x_b, y_b = x_b.ravel(), y_b.ravel()
+    return x_b * 1e-3, y_b * 1e-3
 
 
 def add_properties(pa, *props):
@@ -87,9 +157,9 @@ def add_properties(pa, *props):
 
 class BallBouncing(Application):
     def initialize(self):
-        self.kn = 1e6
-        self.en = 0.9
-        self.rad = 10 * 1e-2
+        self.kn = 5e5
+        self.en = 0.6
+        self.rad = 0.1 * 1e-2
         self.rho = 2.7 * 1e3
 
         self._m = np.pi * self.rad**2 * self.rho
@@ -102,7 +172,7 @@ class BallBouncing(Application):
         self.dt = t_c / t_c * 1e-4
 
     def create_particles(self):
-        xb, yb, _rad = create_ball(3*1e-2, 5*1e-2, 0.5*1e-2, 10)
+        xb, yb, _rad = create_ball(3 * 1e-2, 5 * 1e-2, 0.5 * 1e-2, 10)
         _m = np.pi * _rad**2 * self.rho
         m = np.ones_like(xb) * _m
         h = np.ones_like(xb) * hdx * self.rad
@@ -129,7 +199,7 @@ class BallBouncing(Application):
             'tang_velocity_z', )
 
         xt, yt = create_boundary()
-        _m = np.pi * (_rad)**2 * self.rho
+        _m = np.pi * (1 / 2 * 1e-3)**2 * self.rho
         m = np.ones_like(xt) * _m
         h = np.ones_like(xt) * hdx * self.rad
         wall = get_particle_array_rigid_body(
@@ -140,7 +210,7 @@ class BallBouncing(Application):
             m=m, )
 
         add_properties(wall, 'rad_s')
-        wall.rad_s[:] = (0.5*1e-3)
+        wall.rad_s[:] = (0.5 * 1e-3)
 
         return [ball, wall]
 
@@ -173,11 +243,14 @@ class BallBouncing(Application):
 
 
 if __name__ == '__main__':
-    app = BallBouncing()
-    app.run()
-    # xw, yw = create_boundary()
-    # x, y, _rad = create_ball(3*1e-2, 5*1e-2, 0.5*1e-2, 30)
-    # plt.scatter(x, y)
-    # plt.scatter(xw, yw)
-    # plt.axes().set_aspect('equal', 'datalim')
-    # plt.show()
+    # app = BallBouncing()
+    # app.run()
+    # x, y, _rad = create_ball(3*1e-2, 5*1e-2, 0.5*1e-2, 20)
+    xw, yw = create_boundary()
+    x, y = create_six_layers(False)
+    xtw, ytw = create_temp_wall()
+    plt.scatter(x, y)
+    plt.scatter(xw, yw)
+    plt.scatter(xtw, ytw)
+    plt.axes().set_aspect('equal', 'datalim')
+    plt.show()
