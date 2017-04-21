@@ -83,7 +83,7 @@ def create_boundary():
     return x * 1e-3, y * 1e-3
 
 
-def create_six_layers(b=True):
+def create_six_layers():
     points = 30
     x1, y1 = create_ball(0.5 * 1e-2, 1.6 * 1e-2, 0.5 * 1e-2, points, rad=False)
     # print(len(x1))
@@ -133,13 +133,7 @@ def create_six_layers(b=True):
     body_id = np.asarray([], dtype=int)
     for i in range(33):
         body_id = np.append(body_id, i * _b_id)
-
-    print((body_id))
-    print((x))
-    if b:
-        return x, y, body_id
-    else:
-        return x, y
+    return x, y, body_id
 
 
 def create_temp_wall():
@@ -172,8 +166,12 @@ class BallBouncing(Application):
         self.dt = t_c / t_c * 1e-4
 
     def create_particles(self):
-        xb, yb, _rad = create_ball(3 * 1e-2, 5 * 1e-2, 0.5 * 1e-2, 10)
+        points = 30
+        xb, yb, body_id = create_six_layers()
+
+        x, y, _rad = create_ball(0.5 * 1e-2, 1.6 * 1e-2, 0.5 * 1e-2, points)
         _m = np.pi * _rad**2 * self.rho
+
         m = np.ones_like(xb) * _m
         h = np.ones_like(xb) * hdx * self.rad
         ball = get_particle_array_rigid_body(
@@ -181,7 +179,8 @@ class BallBouncing(Application):
             x=xb,
             y=yb,
             h=h,
-            m=m, )
+            m=m,
+            body_id=body_id,)
 
         add_properties(ball, 'rad_s')
         # ball.rad_s[:] = 0.05 * 1e-2
@@ -232,7 +231,7 @@ class BallBouncing(Application):
                 BodyForce(dest='ball', sources=None, gy=gz),
                 RigidBodyCollision(
                     dest='ball',
-                    sources=['wall'],
+                    sources=['wall', 'ball'],
                     kn=self.kn,
                     gamma_n=self.gamma_n, )
             ]),
@@ -243,14 +242,14 @@ class BallBouncing(Application):
 
 
 if __name__ == '__main__':
-    # app = BallBouncing()
-    # app.run()
+    app = BallBouncing()
+    app.run()
     # x, y, _rad = create_ball(3*1e-2, 5*1e-2, 0.5*1e-2, 20)
-    xw, yw = create_boundary()
-    x, y = create_six_layers(False)
-    xtw, ytw = create_temp_wall()
-    plt.scatter(x, y)
-    plt.scatter(xw, yw)
-    plt.scatter(xtw, ytw)
-    plt.axes().set_aspect('equal', 'datalim')
-    plt.show()
+    # xw, yw = create_boundary()
+    # x, y, body_id = create_six_layers()
+    # xtw, ytw = create_temp_wall()
+    # plt.scatter(x, y)
+    # plt.scatter(xw, yw)
+    # plt.scatter(xtw, ytw)
+    # plt.axes().set_aspect('equal', 'datalim')
+    # plt.show()
