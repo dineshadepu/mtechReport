@@ -1,5 +1,6 @@
 sph_dem_report.pdf
 ## Core latex/pdflatex auxiliary files:
+*.npz
 *.info
 *.aux
 *.lof

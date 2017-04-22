@@ -20,9 +20,10 @@ from pysph.sph.rigid_body import (BodyForce, RigidBodyCollision,
                                   RigidBodyMoments, RigidBodyMotion,
                                   RK2StepRigidBody)
 dim = 2
-tf = 1.
-wall_time = 0.5
+tf = 0.8
+wall_time = 0.3
 gz = -9.81
+points = 20
 
 hdx = 1.0
 
@@ -85,7 +86,6 @@ def create_boundary():
 
 
 def create_six_layers():
-    points = 30
     x1, y1 = create_ball(0.5 * 1e-2, 1.6 * 1e-2, 0.5 * 1e-2, points, rad=False)
     # print(len(x1))
     x2, y2 = x1 + 1 * 1e-2, y1
@@ -152,9 +152,11 @@ def add_properties(pa, *props):
 
 class BallBouncing(Application):
     def initialize(self):
-        self.kn = 5e5
-        self.en = 0.6
+        self.en = 0.2
         self.rad = 0.1 * 1e-2
+        A = np.pi * self.rad**2
+        self.kn = 69 * 1e9 * A / (2 * self.rad)
+        print(self.kn)
         self.rho = 2.7 * 1e3
 
         self._m = np.pi * self.rad**2 * self.rho
@@ -167,7 +169,6 @@ class BallBouncing(Application):
         self.dt = t_c / t_c * 1e-4
 
     def create_particles(self):
-        points = 30
         xb, yb, body_id = create_six_layers()
 
         x, y, _rad = create_ball(0.5 * 1e-2, 1.6 * 1e-2, 0.5 * 1e-2, points)
@@ -181,7 +182,7 @@ class BallBouncing(Application):
             y=yb,
             h=h,
             m=m,
-            body_id=body_id,)
+            body_id=body_id)
 
         add_properties(ball, 'rad_s')
         # ball.rad_s[:] = 0.05 * 1e-2
@@ -246,7 +247,8 @@ class BallBouncing(Application):
                     dest='ball',
                     sources=['wall', 'ball', 'temp_wall'],
                     kn=self.kn,
-                    gamma_n=self.gamma_n, )
+                    gamma_n=self.gamma_n,
+                    mu=0.3)
             ]),
             Group(equations=[RigidBodyMoments(dest='ball', sources=None)]),
             Group(equations=[RigidBodyMotion(dest='ball', sources=None)]),

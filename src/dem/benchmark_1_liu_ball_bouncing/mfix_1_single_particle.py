@@ -114,6 +114,9 @@ class BallBouncing(Application):
         ]
         return equations
 
+    def pre_step(self, solver):
+        solver.dump_output()
+
 
 if __name__ == '__main__':
     app = BallBouncing()
