@@ -105,7 +105,7 @@ class BallBouncing(Application):
         xb, yb, _rad = create_ball(3*1e-2, 2*1e-2, 0.5*1e-2, 10)
         _m = np.pi * _rad**2 * self.rho
         m = np.ones_like(xb) * _m
-        v = np.ones_like(xb) * np.sqrt(2 * 9.81 * 3 * 1e-2)
+        v = -np.ones_like(xb) * np.sqrt(2 * 9.81 * 3 * 1e-2)
         h = np.ones_like(xb) * hdx * self.rad
         ball = get_particle_array_rigid_body(
             name='ball',
