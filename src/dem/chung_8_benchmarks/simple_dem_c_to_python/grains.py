@@ -40,8 +40,6 @@ def interparticle_force(g, a, b):
             # compute the velocity of the contact
             vx_ab = g[a].vx - g[b].vx
             vy_ab = g[a].vy - g[b].vy
-            print(vx_ab)
-            print(vy_ab)
             vn = vx_ab * xn + vy_ab * yn
             vt = vx_ab * xt + vy_ab * yt - (g[a].R * g[a].angv + g[b].R *
                                             g[b].angv)
