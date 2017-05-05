@@ -22,10 +22,8 @@ from pysph.sph.wc.basic import TaitEOS, MomentumEquation
 from pysph.solver.application import Application
 from pysph.sph.rigid_body import (BodyForce, RigidBodyCollision,
                                   RigidBodyMoments, RigidBodyMotion,
-                                  RK2StepRigidBody, FluidForceOnSolid)
-from pysph.sph.rigid_body_akinchi import (
-    BoundaryParticleNumberDenstiy, SummationDensityRigidBody,
-    PressureRigidBody, ViscosityRigidBody)
+                                  RK2StepRigidBody, FluidForceOnSolid,
+                                  SolidForceOnFluid)
 
 
 def create_fluid_with_solid_cube(dx=2 * 1e-3):
@@ -85,18 +83,32 @@ def create_cube():
     x, y = x.ravel(), y.ravel()
     x = x + 75 * 1e-3
     y = y + 130 * 1e-3
-    # indices = []
-    # for i in range(len(x)):
-    #     if 60 * 1e-3 < x[i] < 80 * 1e-3:
-    #         if 133 * 1e-3 < y[i] < 153 * 1e-3:
-    #             indices.append(0)
-    #         else:
-    #             indices.append(1)
-    #     else:
-    #         indices.append(1)
+    indices = []
+    for i in range(len(x)):
+        if 65 * 1e-3 < x[i] < 84 * 1e-3:
+            if 120.5 * 1e-3 < y[i] < 139 * 1e-3:
+                indices.append(0)
+            else:
+                indices.append(1)
+        else:
+            indices.append(1)
 
-    # return x, y, np.asarray(indices)
-    return x, y
+    # Check if indices are correct
+    # print(len(x))
+    # print(len(indices))
+    # x_new = []
+    # y_new = []
+
+    # for i in range(len(x)):
+    #     if indices[i] == 1:
+    #         x_new.append(x[i])
+    #         y_new.append(y[i])
+
+    # plt.scatter(x_new, y_new)
+    # plt.show()
+
+    return x, y, np.asarray(indices)
+    # return x, y, []
 
 
 def initialize_density_fluid(x, y):
@@ -145,7 +157,7 @@ class FluidStructureInteration(Application):
     def create_particles(self):
         """Create the circular patch of fluid."""
         # xf, yf = create_fluid_with_solid_cube()
-        xf, yf = create_fluid()
+        xf, yf = create_fluid_with_solid_cube()
         uf = np.zeros_like(xf)
         vf = np.zeros_like(xf)
         m = initialize_mass(xf, yf)
@@ -157,13 +169,13 @@ class FluidStructureInteration(Application):
         xt, yt = create_boundary(self.dx / 2.)
         ut = np.zeros_like(xt)
         vt = np.zeros_like(xt)
-        m = np.ones_like(xt) * 1000 * self.dx * self.dx
+        m = np.ones_like(xt) * 2120 * self.dx * self.dx
         rho = np.ones_like(xt) * 1000
         h = np.ones_like(xt) * self.hdx * self.dx / 2.
         tank = get_particle_array_wcsph(x=xt, y=yt, h=h, m=m, rho=rho, u=ut,
                                         v=vt, name="tank")
         add_properties(tank, 'rad_s')
-        tank.rad_s[:] = self.dx / 2
+        tank.rad_s[:] = (0.5 * 1e-3)
 
         xc, yc, indices = create_cube()
         _m = 2120 * self.dx * self.dx / 2.
@@ -206,9 +218,9 @@ class FluidStructureInteration(Application):
 
     def create_equations(self):
         equations = [
-            Group(equations=[
-                BoundaryParticleNumberDenstiy(dest='cube', sources=['cube'])
-            ]),
+            # Group(equations=[
+            #     BoundaryParticleNumberDenstiy(dest='cube', sources=['cube'])
+            # ]),
             # Group(equations=[
             #     SummationDensityRigidBody(dest='fluid', sources=['cube'],
             #                               rho0=1000)
@@ -220,23 +232,25 @@ class FluidStructureInteration(Application):
                         gamma=7.0),
             ], real=False),
             Group(equations=[
+                # ContinuityEquation(dest='fluid',
+                #                    sources=['fluid', 'tank']),
                 ContinuityEquation(dest='fluid',
                                    sources=['fluid', 'tank', 'cube']),
                 ContinuityEquation(dest='tank',
-                                   sources=['tank', 'fluid', 'cube']),
+                                   sources=['tank', 'fluid']),
                 MomentumEquation(dest='fluid', sources=['fluid', 'tank'],
                                  alpha=self.alpha, beta=0.0, c0=self.co,
                                  gy=-9.81),
-                PressureRigidBody(dest='fluid', sources=['cube'], rho0=1000),
+                SolidForceOnFluid(dest='fluid', sources=['cube']),
                 XSPHCorrection(dest='fluid', sources=['fluid', 'tank']),
             ]),
             Group(equations=[
                 BodyForce(dest='cube', sources=None, gy=-9.81),
-                # FluidForceOnSolid(dest='cube', sources=['fluid']),
+                FluidForceOnSolid(dest='cube', sources=['fluid', 'tank']),
                 RigidBodyCollision(
                     dest='cube',
                     sources=['tank'],
-                    kn=1e4,
+                    kn=1e5,
                     en=0.5, )
             ]),
             Group(equations=[RigidBodyMoments(dest='cube', sources=None)]),
@@ -246,13 +260,13 @@ class FluidStructureInteration(Application):
 
 
 if __name__ == '__main__':
-    # app = FluidStructureInteration()
-    # app.run()
-    xt, yt = create_boundary()
-    xc, yc = create_cube()
-    xf, yf = create_fluid_with_solid_cube()
-    plt.scatter(xt, yt)
-    plt.scatter(xc, yc)
-    plt.scatter(xf, yf)
-    plt.axes().set_aspect('equal', 'datalim')
-    plt.show()
+    app = FluidStructureInteration()
+    app.run()
+    # xt, yt = create_boundary(1 * 1e-3)
+    # xc, yc, indices = create_cube()
+    # xf, yf = create_fluid_with_solid_cube()
+    # plt.scatter(xt, yt)
+    # plt.scatter(xc, yc)
+    # plt.scatter(xf, yf)
+    # plt.axes().set_aspect('equal', 'datalim')
+    # plt.show()

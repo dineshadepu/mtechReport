@@ -13,6 +13,7 @@ sph_dem_report.pdf
 *.fot
 *.cb
 *.cb2
+*.pyc
 
 ## Intermediate documents:
 *.dvi
@@ -307,25 +308,25 @@ docs/_build/
       /source-dist.tmp1
 
 # files
-*.exe
-*.dll
-*.dwo
-*.do
-*.o
-*.obj
-*.so
-*.dylib
-*.dSYM
-*.jl.cov
-*.jl.*.cov
-*.jl.mem
-*.ji
+     *.exe
+     *.dll
+     *.dwo
+     *.do
+     *.o
+     *.obj
+     *.so
+     *.dylib
+     *.dSYM
+     *.jl.cov
+     *.jl.*.cov
+     *.jl.mem
+     *.ji
 
-.DS_Store
+     .DS_Store
 
-*.png
-*.hdf5
-*.pdf
-*.nlo
-*.un~
-*_output/
+     *.png
+     *.hdf5
+     *.pdf
+     *.nlo
+     *.un~
+     *_output/
