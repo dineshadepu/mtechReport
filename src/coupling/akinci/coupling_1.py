@@ -16,10 +16,10 @@ from pysph.sph.integrator import EPECIntegrator
 from pysph.sph.integrator_step import WCSPHStep
 
 from pysph.sph.equation import Group
-from pysph.sph.basic_equations import (XSPHCorrection, ContinuityEquation,
-                                       SummationDensity)
+from pysph.sph.basic_equations import (XSPHCorrection, ContinuityEquation,)
 from pysph.sph.wc.basic import TaitEOS, MomentumEquation
 from pysph.solver.application import Application
+
 from pysph.sph.rigid_body import (BodyForce, RigidBodyCollision,
                                   RigidBodyMoments, RigidBodyMotion,
                                   RK2StepRigidBody, FluidForceOnSolid,
@@ -27,47 +27,122 @@ from pysph.sph.rigid_body import (BodyForce, RigidBodyCollision,
 
 
 def create_fluid_with_solid_cube(dx=2 * 1e-3):
-    x = np.arange(0, 150 * 1e-3 + 1e-9, dx)
-    y = np.arange(0, 130 * 1e-3 + 1e-9, dx)
+    x_s = 0
+    x_e = 140 * 1e-3
+    y_s = 0 * 1e-3
+    y_e = 130 * 1e-3
 
-    x, y = np.meshgrid(x, y)
-    x, y = x.ravel(), y.ravel()
+    x, y = np.mgrid[x_s:x_e + 1e-9:dx, y_s:y_e + 1e-9:dx]
+    x = x.ravel()
+    y = y.ravel()
 
     indices = []
     for i in range(len(x)):
-        if 63 * 1e-3 < x[i] < 87 * 1e-3:
+        if 60 * 1e-3 <= x[i] <= 80 * 1e-3:
             if y[i] >= 120 * 1e-3:
                 indices.append(i)
 
     x, y = np.delete(x, indices), np.delete(y, indices)
+    # print(len(x))
     return x, y
 
 
-def create_fluid():
-    x = np.arange(0, 10 + 1e-9, 0.1)
-    y = np.arange(0, 8 + 1e-9, 0.1)
-    x, y = np.meshgrid(x, y)
-    x, y = x.ravel() * 1e-2, y.ravel() * 1e-2
+def create_fluid(dx=2 * 1e-3):
+    x_s = 0 + dx
+    x_e = 140 * 1e-3
+    y_s = 0 * 1e-3 + dx
+    y_e = 130 * 1e-3
+
+    x, y = np.mgrid[x_s:x_e:dx, y_s:y_e + 1e-9:dx]
+    x = x.ravel()
+    y = y.ravel()
+    # print(len(x))
     return x, y
 
 
-def create_boundary():
-    # Bottom of the tank
-    x = np.arange(-3 * 0.1, 10.3 + 1e-9, 0.1)
-    y = np.arange(-3 * 0.1, 10 + 1e-9, 0.1)
+def create_boundary(dx=2 * 1e-3):
+    _dx = dx
+    # make boundary particles closer
+    x_s = -dx
+    x_e = -dx - _dx - 1e-9
+    y_s = -2 * 1e-3
+    y_e = 150 * 1e-3
+    x, y = np.mgrid[x_s:x_e:-_dx, y_s:y_e:_dx]
+    xl = x.ravel()
+    yl = y.ravel()
 
-    x, y = np.meshgrid(x, y)
+    x_s = 142 * 1e-3
+    x_e = (142 + 2) * 1e-3
+    y_s = -2 * 1e-3
+    y_e = 150 * 1e-3
+    x, y = np.mgrid[x_s:x_e:_dx, y_s:y_e:_dx]
+    xr = x.ravel()
+    yr = y.ravel()
+
+    x_s = -dx - _dx
+    x_e = (142 + 2) * 1e-3
+    y_s = -dx
+    y_e = -dx - _dx - 1e-9
+    x, y = np.mgrid[x_s:x_e:_dx, y_s:y_e:-_dx]
+    xm = x.ravel()
+    ym = y.ravel()
+    x, y = np.concatenate([xl, xr, xm]), np.concatenate([yl, yr, ym])
+    # x, y = np.concatenate([xl, xm]), np.concatenate([yl, ym])
+    # print(x)
+    # print(len(x))
+
+    return x, y
+
+
+def create_cube():
+    # Cube length is 20mm
+    # Vessel base is 140mm
+    # Cube starts at 60mm and ends at 80 mm
+    # Y position of cube is 120 to 140
+    x, y = np.mgrid[60 * 1e-3:80 * 1e-3 + 1e-9:1 * 1e-3, 133 * 1e-3:153 * 1e-3
+                    + 1e-9:1e-3]
     x, y = x.ravel(), y.ravel()
-
     indices = []
     for i in range(len(x)):
-        if x[i] <= 10 and x[i] >= 0:
-            if y[i] >= 0:
-                indices.append(i)
+        if 60 * 1e-3 < x[i] < 80 * 1e-3:
+            if 133 * 1e-3 < y[i] < 153 * 1e-3:
+                indices.append(0)
+            else:
+                indices.append(1)
+        else:
+            indices.append(1)
 
-    x = np.delete(x, indices)
-    y = np.delete(y, indices)
-    return x * 1e-2, y * 1e-2
+    return x, y, np.asarray(indices)
+
+
+def initialize_density_fluid(x, y):
+    # Taken from
+    # https://www.uibk.ac.at/umwelttechnik/teaching/master/master_bergmeister.pdf
+    c_0 = 2 * np.sqrt(2 * 9.81 * 130 * 1e-3)
+    rho_0 = 1000
+    height_water_clmn = 130 * 1e-3
+    gamma = 7.
+    _tmp = gamma / (rho_0 * c_0**2)
+
+    rho = np.zeros_like(y)
+    for i in range(len(rho)):
+        p_i = rho_0 * 9.81 * (height_water_clmn - y[i])
+        rho[i] = rho_0 * (1 + p_i * _tmp)**(1. / gamma)
+    return rho
+
+
+def initialize_mass(x, y):
+    rho = initialize_density_fluid(x, y)
+
+    m = np.zeros_like(x)
+    dx = 2 * 1e-3
+    m[:] = rho * dx * dx
+
+    return m
+
+
+def find_h_cube(x, y):
+    pass
 
 
 def add_properties(pa, *props):
@@ -77,41 +152,65 @@ def add_properties(pa, *props):
 
 class FluidStructureInteration(Application):
     def initialize(self):
-        self.dx = .1 * 1e-2
+        self.dx = 2 * 1e-3
         self.hdx = 1.2
         self.ro = 1000
-        self.co = 2 * np.sqrt(9.81 * 10 * 1e-2)
-        self.alpha = 0.25
+        self.co = 2 * np.sqrt(2 * 9.81 * 130 * 1e-3)
+        self.alpha = 0.1
 
     def create_particles(self):
         """Create the circular patch of fluid."""
         # xf, yf = create_fluid_with_solid_cube()
         xf, yf = create_fluid()
-        m = 0.1 * 0.1 * 1e-2 * 1e-2 * 1000 * np.ones_like(xf)
-        rho = np.ones_like(xf) * 1000
-        h = np.ones_like(xf) * self.hdx * 0.1 * 1e-2
-        fluid = get_particle_array_wcsph(x=xf, y=yf, h=h, m=m, rho=rho,
-                                         name="fluid")
+        uf = np.zeros_like(xf)
+        vf = np.zeros_like(xf)
+        m = initialize_mass(xf, yf)
+        rho = initialize_density_fluid(xf, yf)
+        h = np.ones_like(xf) * self.hdx * self.dx
+        fluid = get_particle_array_wcsph(x=xf, y=yf, h=h, m=m, rho=rho, u=uf,
+                                         v=vf, name="fluid")
 
-        xt, yt = create_boundary()
-        m = np.ones_like(xt) * 1400 * 0.1 * 0.1 * 1e-2 * 1e-2
+        xt, yt = create_boundary(self.dx / 2.)
+        ut = np.zeros_like(xt)
+        vt = np.zeros_like(xt)
+        m = np.ones_like(xt) * 1500 * self.dx * self.dx
         rho = np.ones_like(xt) * 1000
-        h = np.ones_like(xt) * self.hdx * 0.1 * 1e-2
-        tank = get_particle_array_wcsph(x=xt, y=yt, h=h, m=m, rho=rho,
-                                        name="tank")
-        add_properties(tank, 'rad_s')
-        tank.rad_s[:] = (0.5 * 1e-3)
+        h = np.ones_like(xt) * self.hdx * self.dx / 2.
+        tank = get_particle_array_wcsph(x=xt, y=yt, h=h, m=m, rho=rho, u=ut,
+                                        v=vt, name="tank")
 
-        return [fluid, tank]
+        xc, yc, indices = create_cube()
+        _m = 2120 * self.dx * self.dx / 2.
+        m = np.ones_like(xc) * _m
+        h = np.ones_like(xc) * self.hdx * self.dx / 2.
+        rho = np.ones_like(xc) * 2120
+        cube = get_particle_array_rigid_body(name="cube", x=xc, y=yc, m=m, h=h,
+                                             rho=rho)
+        add_properties(cube, 'indices')
+        cube.indices[:] = indices[:]
+        add_properties(cube, 'rad_s')
+        cube.rad_s[:] = 0.5 * 1e-3
+        add_properties(
+            cube,
+            'tang_disp_x',
+            'tang_disp_y',
+            'tang_disp_z',
+            'tang_disp_x0',
+            'tang_disp_y0',
+            'tang_disp_z0',
+            'tang_velocity_x',
+            'tang_velocity_y',
+            'tang_velocity_z', )
+
+        return [fluid, tank, cube]
 
     def create_solver(self):
         kernel = CubicSpline(dim=2)
 
-        integrator = EPECIntegrator(fluid=WCSPHStep())
-        # integrator = EPECIntegrator(cube=RK2StepRigidBody())
+        integrator = EPECIntegrator(fluid=WCSPHStep(), cube=RK2StepRigidBody())
+        # integrator = EPECIntegrator(fluid=WCSPHStep())
 
-        # dt = 0.125 * self.dx * self.hdx / (self.co * 1.1) / 4.
-        dt = 1e-4
+        dt = 0.125 * self.dx * self.hdx / (self.co * 1.1) / 2.
         print("DT: %s" % dt)
         tf = 0.5
         solver = Solver(kernel=kernel, dim=2, integrator=integrator, dt=dt,
@@ -128,17 +227,29 @@ class FluidStructureInteration(Application):
                         gamma=7.0),
             ], real=False),
             Group(equations=[
-                # ContinuityEquation(dest='fluid',
-                #                    sources=['fluid', 'tank']),
-                ContinuityEquation(dest='fluid',
-                                   sources=['fluid', 'tank']),
-                ContinuityEquation(dest='tank',
-                                   sources=['tank', 'fluid']),
+                ContinuityEquation(
+                    dest='fluid',
+                    sources=['fluid', 'tank', 'cube'],),
+                ContinuityEquation(
+                    dest='tank',
+                    sources=['fluid', 'tank'], ),
                 MomentumEquation(dest='fluid', sources=['fluid', 'tank'],
                                  alpha=self.alpha, beta=0.0, c0=self.co,
                                  gy=-9.81),
+                SolidForceOnFluid(dest='fluid', sources=['cube']),
                 XSPHCorrection(dest='fluid', sources=['fluid', 'tank']),
             ]),
+            Group(equations=[
+                BodyForce(dest='cube', sources=None, gy=-9.81),
+                FluidForceOnSolid(dest='cube', sources=['fluid']),
+                # RigidBodyCollision(
+                #     dest='cube',
+                #     sources=['tank'],
+                #     kn=1e5,
+                #     en=0.5, )
+            ]),
+            Group(equations=[RigidBodyMoments(dest='cube', sources=None)]),
+            Group(equations=[RigidBodyMotion(dest='cube', sources=None)]),
         ]
         return equations
 
@@ -147,9 +258,13 @@ if __name__ == '__main__':
     app = FluidStructureInteration()
     app.run()
     # x, y = create_fluid()
-    # xb, yb = create_boundary()
+    # xc, yc, indices = create_cube()
+    # xt, yt = create_boundary(1 * 1e-3)
     # plt.scatter(x, y)
-    # plt.scatter(xb, yb)
+    # plt.scatter(xc, yc)
+    # plt.scatter(xt, yt)
+    # plt.axes().set_aspect('equal', 'datalim')
+    # plt.show()
     # xt, yt = create_boundary(1 * 1e-3)
     # xc, yc, indices = create_cube()
     # xf, yf = create_fluid_with_solid_cube()
@@ -158,3 +273,5 @@ if __name__ == '__main__':
     # plt.scatter(xf, yf)
     # plt.axes().set_aspect('equal', 'datalim')
     # plt.show()
+
+#  LocalWords:  SummationDensityShepardFilter
