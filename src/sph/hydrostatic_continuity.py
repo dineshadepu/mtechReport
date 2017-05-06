@@ -4,6 +4,7 @@ Check basic equations of SPH to throw a ball inside the vessel
 """
 from __future__ import print_function
 import numpy as np
+import matplotlib.pyplot as plt
 
 # PySPH base and carray imports
 from pysph.base.utils import get_particle_array_wcsph
@@ -43,7 +44,7 @@ def create_fluid_with_solid_cube(dx=2 * 1e-3):
 def create_fluid(dx=2 * 1e-3):
     x_s = 0
     x_e = 140 * 1e-3
-    y_s = 0 * 1e-3
+    y_s = 0 * 1e-3 + dx
     y_e = 130 * 1e-3
 
     x, y = np.mgrid[x_s:x_e + 1e-9:dx, y_s:y_e + 1e-9:dx]
@@ -214,5 +215,19 @@ class FluidStructureInteration(Application):
 if __name__ == '__main__':
     app = FluidStructureInteration()
     app.run()
+    # x, y = create_fluid()
+    # xt, yt = create_boundary(1 * 1e-3)
+    # plt.scatter(xt, yt)
+    # plt.scatter(x, y)
+    # plt.axes().set_aspect('equal', 'datalim')
+    # plt.show()
+    # xt, yt = create_boundary(1 * 1e-3)
+    # xc, yc, indices = create_cube()
+    # xf, yf = create_fluid_with_solid_cube()
+    # plt.scatter(xt, yt)
+    # plt.scatter(xc, yc)
+    # plt.scatter(xf, yf)
+    # plt.axes().set_aspect('equal', 'datalim')
+    # plt.show()
 
 #  LocalWords:  SummationDensityShepardFilter
