@@ -112,7 +112,7 @@ def create_cube():
         else:
             indices.append(1)
 
-    return x, y, np.asarray(indices)
+    return x, y+10*1e-3, np.asarray(indices)
 
 
 def initialize_density_fluid(x, y):
@@ -232,7 +232,7 @@ class FluidStructureInteration(Application):
                     sources=['fluid', 'tank', 'cube'],),
                 ContinuityEquation(
                     dest='tank',
-                    sources=['fluid', 'tank'], ),
+                    sources=['fluid', 'tank', 'cube'], ),
                 MomentumEquation(dest='fluid', sources=['fluid', 'tank'],
                                  alpha=self.alpha, beta=0.0, c0=self.co,
                                  gy=-9.81),
