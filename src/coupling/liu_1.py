@@ -16,10 +16,10 @@ from pysph.sph.integrator import EPECIntegrator
 from pysph.sph.integrator_step import WCSPHStep
 
 from pysph.sph.equation import Group
-from pysph.sph.basic_equations import (XSPHCorrection, ContinuityEquation,
-                                       SummationDensity)
+from pysph.sph.basic_equations import (XSPHCorrection, ContinuityEquation,)
 from pysph.sph.wc.basic import TaitEOS, MomentumEquation
 from pysph.solver.application import Application
+
 from pysph.sph.rigid_body import (BodyForce, RigidBodyCollision,
                                   RigidBodyMoments, RigidBodyMotion,
                                   RK2StepRigidBody, FluidForceOnSolid,
@@ -27,15 +27,18 @@ from pysph.sph.rigid_body import (BodyForce, RigidBodyCollision,
 
 
 def create_fluid_with_solid_cube(dx=2 * 1e-3):
-    x = np.arange(0, 150 * 1e-3 + 1e-9, dx)
-    y = np.arange(0, 130 * 1e-3 + 1e-9, dx)
+    x_s = 0
+    x_e = 140 * 1e-3
+    y_s = 0 * 1e-3
+    y_e = 130 * 1e-3
 
-    x, y = np.meshgrid(x, y)
-    x, y = x.ravel(), y.ravel()
+    x, y = np.mgrid[x_s:x_e + 1e-9:dx, y_s:y_e + 1e-9:dx]
+    x = x.ravel()
+    y = y.ravel()
 
     indices = []
     for i in range(len(x)):
-        if 63 * 1e-3 < x[i] < 87 * 1e-3:
+        if 60 * 1e-3 <= x[i] <= 80 * 1e-3:
             if y[i] >= 120 * 1e-3:
                 indices.append(i)
 
@@ -44,31 +47,50 @@ def create_fluid_with_solid_cube(dx=2 * 1e-3):
     return x, y
 
 
+def create_fluid(dx=2 * 1e-3):
+    x_s = 0 + dx
+    x_e = 140 * 1e-3
+    y_s = 0 * 1e-3 + dx
+    y_e = 130 * 1e-3
+
+    x, y = np.mgrid[x_s:x_e:dx, y_s:y_e + 1e-9:dx]
+    x = x.ravel()
+    y = y.ravel()
+    # print(len(x))
+    return x, y
+
+
 def create_boundary(dx=2 * 1e-3):
-    # Bottom of the tank
-    x = np.arange(0, 150 * 1e-3 + 1e-9, dx)
-    y = np.arange(-dx, -2 * dx - 1e-9, -dx)
+    _dx = dx
+    # make boundary particles closer
+    x_s = -dx
+    x_e = -dx - _dx - 1e-9
+    y_s = -2 * 1e-3
+    y_e = 150 * 1e-3
+    x, y = np.mgrid[x_s:x_e:-_dx, y_s:y_e:_dx]
+    xl = x.ravel()
+    yl = y.ravel()
 
-    x, y = np.meshgrid(x, y)
-    x, y = x.ravel(), y.ravel()
+    x_s = 142 * 1e-3
+    x_e = (142 + 2) * 1e-3
+    y_s = -2 * 1e-3
+    y_e = 150 * 1e-3
+    x, y = np.mgrid[x_s:x_e:_dx, y_s:y_e:_dx]
+    xr = x.ravel()
+    yr = y.ravel()
 
-    # Left particles of the tank
-    xl = np.arange(-dx, -2 * dx - 1e-9, -dx)
-    yl = np.arange(-2 * dx, 140 * 1e-3 + 1e-9, dx)
+    x_s = -dx - _dx
+    x_e = (142 + 2) * 1e-3
+    y_s = -dx
+    y_e = -dx - _dx - 1e-9
+    x, y = np.mgrid[x_s:x_e:_dx, y_s:y_e:-_dx]
+    xm = x.ravel()
+    ym = y.ravel()
+    x, y = np.concatenate([xl, xr, xm]), np.concatenate([yl, yr, ym])
+    # x, y = np.concatenate([xl, xm]), np.concatenate([yl, ym])
+    # print(x)
+    # print(len(x))
 
-    xl, yl = np.meshgrid(xl, yl)
-    xl, yl = xl.ravel(), yl.ravel()
-
-    # Right particle of the tank
-    xr = np.arange(150 * 1e-3 + dx, 150 * 1e-3 + 2 * dx + 1e-9, dx)
-    yr = np.arange(-2 * dx, 140 * 1e-3 + 1e-9, dx)
-
-    xr, yr = np.meshgrid(xr, yr)
-    xr, yr = xr.ravel(), yr.ravel()
-
-    # concatenate all parts of tank
-    x = np.concatenate([x, xl, xr])
-    y = np.concatenate([y, yl, yr])
     return x, y
 
 
@@ -77,38 +99,20 @@ def create_cube():
     # Vessel base is 140mm
     # Cube starts at 60mm and ends at 80 mm
     # Y position of cube is 120 to 140
-    x = np.arange(-10*1e-3, 10*1e-3+1e-9, 1e-3)
-    y = np.arange(-10*1e-3, 10*1e-3+1e-9, 1e-3)
-    x, y = np.meshgrid(x, y)
+    x, y = np.mgrid[60 * 1e-3:80 * 1e-3 + 1e-9:1 * 1e-3, 133 * 1e-3:153 * 1e-3
+                    + 1e-9:1e-3]
     x, y = x.ravel(), y.ravel()
-    x = x + 75 * 1e-3
-    y = y + 130 * 1e-3
     indices = []
     for i in range(len(x)):
-        if 65 * 1e-3 < x[i] < 84 * 1e-3:
-            if 120.5 * 1e-3 < y[i] < 139 * 1e-3:
+        if 60 * 1e-3 < x[i] < 80 * 1e-3:
+            if 133 * 1e-3 < y[i] < 153 * 1e-3:
                 indices.append(0)
             else:
                 indices.append(1)
         else:
             indices.append(1)
 
-    # Check if indices are correct
-    # print(len(x))
-    # print(len(indices))
-    # x_new = []
-    # y_new = []
-
-    # for i in range(len(x)):
-    #     if indices[i] == 1:
-    #         x_new.append(x[i])
-    #         y_new.append(y[i])
-
-    # plt.scatter(x_new, y_new)
-    # plt.show()
-
     return x, y, np.asarray(indices)
-    # return x, y, []
 
 
 def initialize_density_fluid(x, y):
@@ -157,7 +161,7 @@ class FluidStructureInteration(Application):
     def create_particles(self):
         """Create the circular patch of fluid."""
         # xf, yf = create_fluid_with_solid_cube()
-        xf, yf = create_fluid_with_solid_cube()
+        xf, yf = create_fluid()
         uf = np.zeros_like(xf)
         vf = np.zeros_like(xf)
         m = initialize_mass(xf, yf)
@@ -169,13 +173,11 @@ class FluidStructureInteration(Application):
         xt, yt = create_boundary(self.dx / 2.)
         ut = np.zeros_like(xt)
         vt = np.zeros_like(xt)
-        m = np.ones_like(xt) * 2120 * self.dx * self.dx
+        m = np.ones_like(xt) * 1500 * self.dx * self.dx
         rho = np.ones_like(xt) * 1000
         h = np.ones_like(xt) * self.hdx * self.dx / 2.
         tank = get_particle_array_wcsph(x=xt, y=yt, h=h, m=m, rho=rho, u=ut,
                                         v=vt, name="tank")
-        add_properties(tank, 'rad_s')
-        tank.rad_s[:] = (0.5 * 1e-3)
 
         xc, yc, indices = create_cube()
         _m = 2120 * self.dx * self.dx / 2.
@@ -206,9 +208,9 @@ class FluidStructureInteration(Application):
         kernel = CubicSpline(dim=2)
 
         integrator = EPECIntegrator(fluid=WCSPHStep(), cube=RK2StepRigidBody())
-        # integrator = EPECIntegrator(cube=RK2StepRigidBody())
+        # integrator = EPECIntegrator(fluid=WCSPHStep())
 
-        dt = 0.125 * self.dx * self.hdx / (self.co * 1.1) / 4.
+        dt = 0.125 * self.dx * self.hdx / (self.co * 1.1) / 2.
         print("DT: %s" % dt)
         tf = 0.5
         solver = Solver(kernel=kernel, dim=2, integrator=integrator, dt=dt,
@@ -218,13 +220,6 @@ class FluidStructureInteration(Application):
 
     def create_equations(self):
         equations = [
-            # Group(equations=[
-            #     BoundaryParticleNumberDenstiy(dest='cube', sources=['cube'])
-            # ]),
-            # Group(equations=[
-            #     SummationDensityRigidBody(dest='fluid', sources=['cube'],
-            #                               rho0=1000)
-            # ]),
             Group(equations=[
                 TaitEOS(dest='fluid', sources=None, rho0=self.ro, c0=self.co,
                         gamma=7.0),
@@ -232,12 +227,12 @@ class FluidStructureInteration(Application):
                         gamma=7.0),
             ], real=False),
             Group(equations=[
-                # ContinuityEquation(dest='fluid',
-                #                    sources=['fluid', 'tank']),
-                ContinuityEquation(dest='fluid',
-                                   sources=['fluid', 'tank', 'cube']),
-                ContinuityEquation(dest='tank',
-                                   sources=['tank', 'fluid']),
+                ContinuityEquation(
+                    dest='fluid',
+                    sources=['fluid', 'tank', 'cube'],),
+                ContinuityEquation(
+                    dest='tank',
+                    sources=['fluid', 'tank'], ),
                 MomentumEquation(dest='fluid', sources=['fluid', 'tank'],
                                  alpha=self.alpha, beta=0.0, c0=self.co,
                                  gy=-9.81),
@@ -246,12 +241,12 @@ class FluidStructureInteration(Application):
             ]),
             Group(equations=[
                 BodyForce(dest='cube', sources=None, gy=-9.81),
-                FluidForceOnSolid(dest='cube', sources=['fluid', 'tank']),
-                RigidBodyCollision(
-                    dest='cube',
-                    sources=['tank'],
-                    kn=1e5,
-                    en=0.5, )
+                FluidForceOnSolid(dest='cube', sources=['fluid']),
+                # RigidBodyCollision(
+                #     dest='cube',
+                #     sources=['tank'],
+                #     kn=1e5,
+                #     en=0.5, )
             ]),
             Group(equations=[RigidBodyMoments(dest='cube', sources=None)]),
             Group(equations=[RigidBodyMotion(dest='cube', sources=None)]),
@@ -262,6 +257,14 @@ class FluidStructureInteration(Application):
 if __name__ == '__main__':
     app = FluidStructureInteration()
     app.run()
+    # x, y = create_fluid()
+    # xc, yc, indices = create_cube()
+    # xt, yt = create_boundary(1 * 1e-3)
+    # plt.scatter(x, y)
+    # plt.scatter(xc, yc)
+    # plt.scatter(xt, yt)
+    # plt.axes().set_aspect('equal', 'datalim')
+    # plt.show()
     # xt, yt = create_boundary(1 * 1e-3)
     # xc, yc, indices = create_cube()
     # xf, yf = create_fluid_with_solid_cube()
@@ -270,3 +273,5 @@ if __name__ == '__main__':
     # plt.scatter(xf, yf)
     # plt.axes().set_aspect('equal', 'datalim')
     # plt.show()
+
+#  LocalWords:  SummationDensityShepardFilter
