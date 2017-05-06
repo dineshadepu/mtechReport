@@ -47,7 +47,7 @@ def create_fluid(dx=2 * 1e-3):
     y_s = 0 * 1e-3 + dx
     y_e = 130 * 1e-3
 
-    x, y = np.mgrid[x_s:x_e + 1e-9:dx, y_s:y_e + 1e-9:dx]
+    x, y = np.mgrid[x_s:x_e:dx, y_s:y_e + 1e-9:dx]
     x = x.ravel()
     y = y.ravel()
     # print(len(x))
