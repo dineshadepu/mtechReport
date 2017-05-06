@@ -16,14 +16,15 @@ from pysph.sph.integrator import EPECIntegrator
 from pysph.sph.integrator_step import WCSPHStep
 
 from pysph.sph.equation import Group
-from pysph.sph.basic_equations import (XSPHCorrection, ContinuityEquation,)
+from pysph.sph.basic_equations import (
+    XSPHCorrection,
+    ContinuityEquation, )
 from pysph.sph.wc.basic import TaitEOS, MomentumEquation
 from pysph.solver.application import Application
 
-from pysph.sph.rigid_body import (BodyForce, RigidBodyCollision,
-                                  RigidBodyMoments, RigidBodyMotion,
-                                  RK2StepRigidBody, FluidForceOnSolid,
-                                  SolidForceOnFluid)
+from pysph.sph.rigid_body import (
+    BodyForce, RigidBodyCollision, RigidBodyMoments, RigidBodyMotion,
+    RK2StepRigidBody, PressureRigidBody, NumberDensity)
 
 
 def create_fluid_with_solid_cube(dx=2 * 1e-3):
@@ -227,21 +228,22 @@ class FluidStructureInteration(Application):
                         gamma=7.0),
             ], real=False),
             Group(equations=[
+                NumberDensity(dest='cube', sources=None),
                 ContinuityEquation(
                     dest='fluid',
-                    sources=['fluid', 'tank', 'cube'],),
+                    sources=['fluid', 'tank', 'cube'], ),
                 ContinuityEquation(
                     dest='tank',
                     sources=['fluid', 'tank'], ),
-                MomentumEquation(dest='fluid', sources=['fluid', 'tank'],
-                                 alpha=self.alpha, beta=0.0, c0=self.co,
-                                 gy=-9.81),
-                SolidForceOnFluid(dest='fluid', sources=['cube']),
+                MomentumEquation(
+                    dest='fluid', sources=['fluid', 'tank', 'cube'],
+                    alpha=self.alpha, beta=0.0, c0=self.co, gy=-9.81),
+                PressureRigidBody(dest='fluid', sources='cube',
+                                  rho0=self.rho0),
                 XSPHCorrection(dest='fluid', sources=['fluid', 'tank']),
             ]),
             Group(equations=[
                 BodyForce(dest='cube', sources=None, gy=-9.81),
-                FluidForceOnSolid(dest='cube', sources=['fluid']),
                 # RigidBodyCollision(
                 #     dest='cube',
                 #     sources=['tank'],
