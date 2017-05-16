@@ -1,0 +1,20 @@
+\chapter{Smoothed Particle Hydrodynamics (SPH)}
+\label{chap:SPH}
+
+In the present work Smoothed Particle Hydrodynamics, a particle based
+framework is used to study the fluid motion, using Naview-stokes
+equation as basis for fluid motion.
+
+In SPH, the fluid is discretized into particles, contrast to euerian
+grid based scemes. The physical properties of the fluid are obtained
+at the particle, where as in eulerian frameworks, the properties are
+calcualted at locations.
+
+Further, physical quantities of a particle are computed by weighted
+average of neighbouring particles using appropriate kernels. In SPH,
+the integral representation of a field variable A at location x_i is
+defined as
+\begin{equation}
+  \label{eq:integral_rep}
+  A(x_i) = \int A(x_j) W(x_i - x_j, h)
+\end{equation}
