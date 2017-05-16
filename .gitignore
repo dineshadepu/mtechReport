@@ -17,6 +17,14 @@ sph_dem_report.pdf
 *.hdf5
 *.pdf
 *.un~
+.DS_Store
+
+*.png
+*.hdf5
+*.pdf
+*.nlo
+*.un~
+*_output/
 
 ## Intermediate documents:
 *.dvi
