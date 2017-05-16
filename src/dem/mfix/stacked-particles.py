@@ -4,6 +4,7 @@ Check the complete molecular dynamics code
 """
 from __future__ import print_function
 import numpy as np
+
 import matplotlib.pyplot as plt
 
 # PySPH base and carray imports
@@ -11,6 +12,7 @@ from pysph.base.utils import get_particle_array_dem
 from pysph.base.kernels import CubicSpline
 
 from pysph.solver.solver import Solver
+from pysph.solver.utils import get_files, iter_output
 from pysph.sph.integrator import EPECIntegrator
 from pysph.sph.integrator_step import DEMStep
 
@@ -96,7 +98,7 @@ class FluidStructureInteration(Application):
 
         dt = 1e-5
         print("DT: %s" % dt)
-        tf = 0.1
+        tf = 1
         solver = Solver(kernel=kernel, dim=2, integrator=integrator, dt=dt,
                         tf=tf, adaptive_timestep=False)
 
@@ -120,6 +122,20 @@ class FluidStructureInteration(Application):
         ]
         return equations
 
+    def post_processing(self):
+        files = get_files('stacked-particles_output')
+        t = []
+        y1 = []
+        y2 = []
+        for solver_data, sand, in iter_output(files, 'sand'):
+            t.append(solver_data['t'])
+            y1.append(sand.y[0])
+            y2.append(sand.y[1])
+        print("Done")
+        plt.plot(t, y1)
+        # plt.plot(t, y2)
+        plt.show()
+
     # def pre_step(self, solver):
     #     solver.dump_output()
 
@@ -127,6 +143,7 @@ class FluidStructureInteration(Application):
 if __name__ == '__main__':
     app = FluidStructureInteration()
     app.run()
+    app.post_processing()
     # x, y = create_hopper(0.1)
     # x, y = create_fluid()
     # xc, yc, indices = create_cube()
@@ -144,5 +161,3 @@ if __name__ == '__main__':
     # plt.scatter(xf, yf)
     # plt.axes().set_aspect('equal', 'datalim')
     # plt.show()
-
-#  LocalWords:  SummationDensityShepardFilter
