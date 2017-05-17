@@ -12,38 +12,149 @@ laws.
   \frac{d^2 \vec{\omega}}{dt^2} = \vec{M}(\vec{x}, \vec{v}, m)
 \end{align}
 
-
 Where $\vec{F}$, $\vec{M}$ is the force and moment acting on the
 particle. m, $\vec{v}$, $\vec{x}$ are the mass, position and velocity
 of the particle.
-
 The force $\vec{F}$ in equation\ref{eq:newton_equation_of_motion} is
 the one to be computed during each time step. This force arises due to
 collision of particles.
 
-\begin{figure}[!h]
-\begin{center}
-\includegraphics[width=0.9\textwidth]{dem/two_pars_in_contact}
-\caption{TDMA channel Access Mechanism} \label{fig:tdma}
-\end{center}
-\end{figure}
-
 % \begin{figure}
 %   \centering
-%   \includegraphics[scale=1.5]{two_pars_in_contact}
+%   \includegraphics[scale=0.5]{dem/two_pars_in_contact}
 %   \caption{Two spherical particles in contact}
-%   \label{fig:two spherical particles in contact}
+%   \label{fig:tspc}
 % \end{figure}
 
-Assume at a given instant two particles are in contact as in
-% figure\ref{fig:two spherical particles in contact}.
+Before studying the interaction of a particle with wall or any other
+spherical particle, lets consider a spherical particle with mass m
+freely falling under gravity. For such a model, the governing
+differential equation can be written as
+
+\begin{align}
+  \label{eq:free_fall}
+  \frac{d^2 \vec{x}}{dt^2} = \vec{g}\\
+  \frac{d^2 \vec{\omega}}{dt^2} = 0
+\end{align}
+
+Such a differential equation \eqref{eq:free_fall} governs a scene like
+in figure \eqref{fig:free_fall}
+
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.3]{dem/free_fall}
+  \caption{A freely falling Sphere}
+  \label{fig:free_fall}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.3]{dem/bounce_back}
+  \caption{A freely falling Sphere onto a wall}
+  \label{fig:bounce_back}
+\end{subfigure}
+\caption{Behaviour of sphere under different conditions}
+\label{fig:sphere_intro}
+\end{figure}
 
 
-Granular material consist of a large number of particles. There particles interact
-via short range forces, i.e., only via mechanical contact.
+In freely falling situation, the particle doesn't see any obstacles,
+and follows a straight line path.
 
-The dynamics of a granular material is governed by Newton's equation of motion.
-In modelling rigid body collision DEM can be used.
+Now assume that there is a wall obstructing the motion of this
+spherical ball.  As the ball hits the wall it has to bounce back
+\eqref{fig:bounce_back}, because of the repulsion force from the
+wall. There are two ways to model such a behaviour.
+
+\begin{itemize}
+\item Event driven method (hard particles)
+\item Discrete element methods (soft particles)
+\end{itemize}
+
+
+Present work deals with Discrete element method, with a little introduction
+to Event driven method.
+
+\section{Discrete element method (DEM)}
+\label{sec:edm}
+
+In this method at every instant of time the ball is checked if it is
+in contact with any other particle or wall. If it is, then the force
+is computed from the relative positions of the overlapping
+particles. By using such force($\vec{F}$) \eqref{eq:newton_equation_of_motion} is
+integrated using Euler or RK2.
+
+\subsection{Force calculation}
+\label{sec:force}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.5]{dem/collision}
+  \caption{Two spherical particles in contact}
+  \label{fig:tspc}
+\end{figure}
+
+\begin{equation}
+  \label{eq:overlap}
+  \delta = (r_i + r_j) - |\vec{X}_{i} - \vec{X}_{j}|
+\end{equation}
+
+Say two particles \eqref{fig:tspc} i and j with radii $r_{i}$ and
+$r_{j}$, are in contact if $\delta$ \eqref{eq:overlap} is positive.
+The particle i has linear velocity $\vec{V}_{i}$ and angular velocity
+of $\vec{\omega}_{i}$ particle j has linear velocity $\vec{V}_{j}$ angular
+velocity of $\vec{\omega}_{j}$.
+
+The unit normal vector along particle i to particle j  is given by
+
+\begin{equation}
+  \label{eq:normal_unit}
+  \vec{n}_{ij} = \frac{\vec{X}_{j} - \vec{X}_{i}}{|\vec{X}_{j} - \vec{X}_{i}|}
+\end{equation}
+
+The relative velocity of point of contact becomes
+
+\begin{equation}
+  \label{eq:relative}
+  \vec{V}_{ij} = \vec{V}_{i} - \vec{V}_{j} +
+  (r_{i} \vec{\omega}_{i} + r_{j} \vec{\omega}_{j}) \times \vec{n}_{ij}
+\end{equation}
+
+Therefore the normal and tangential components of contact velocity are
+
+\begin{equation}
+  \label{eq:normal_vel}
+  \vec{V}_{nij} = \vec{V}_{ij} \cdot \vec{n}_{ij} \vec{n}_{ij}
+\end{equation}
+
+\begin{equation}
+  \label{eq:tang_vel}
+  \vec{V}_{tij} = \vec{V}_{ij} - \vec{V}_{ij} \cdot \vec{n}_{ij} \vec{n}_{ij}
+\end{equation}
+
+The tangent to the plane of contact is
+
+\begin{equation}
+  \label{eq:tang_unit}
+  \vec{t}_{ij} = \frac{\vec{V}_{tij}}{|\vec{V}_{tij}|}
+\end{equation}
+
+
+Discrete element method is a soft sphere approach. In soft sphere
+approach the overlap between two particles is described by a spring
+and a dashpot in both normal and tangential direction. Generally, when
+two particles collide, there will be a repulsion force on both the
+particles. This repulsive force is represented by springs, whose
+magnitude depends on the overlap amount. Similarly, when a collision
+occurs, there will be damping of energy due to deformation of the body
+and the friction force between the particles. This damping is
+introduced by the dashpot between the particles. The respective spring
+and damping coefficients depend on the coefficient of restitution
+between the colliding particles and the material properties of the
+colliding particles.
+
+
 
 %%
 
