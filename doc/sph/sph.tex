@@ -1,0 +1,142 @@
+\chapter{Smoothed Particle Hydrodynamics}
+\label{chap:SPH}
+
+In the present work Smoothed Particle Hydrodynamics (SPH), a particle based
+framework is used to study the fluid motion, using Navier-stokes
+equation as basis for fluid motion.
+
+In SPH, the fluid is discretized into particles, contrast to euerian
+grid based scemes. The physical properties of the fluid are obtained
+at the particle, where as in eulerian frameworks, the properties are
+calcualted at locations.
+
+Further, physical quantities of a particle are computed by weighted
+average of neighbouring particles using appropriate kernels. In SPH,
+the integral representation of a field variable A at location $x_i$ is
+defined as
+
+\begin{equation}
+  \label{eq:integral_rep}
+  A(x_i) = \int\> A(x_j) \>W(x_i - x_j, h)
+\end{equation}
+
+Where W is a kernel function. $dx_{j}$ is the volume of the particle
+situated at $x_j$. Here W is like a weighted factor for the
+contributions from the neighbourhood interpolation points.
+
+Solving \eqref{eq:integral_rep} numerically, needs to discretize the
+domain into particles. Now changing the integral representation to
+summation form interms of the discretized points, gives us
+
+\begin{equation}
+  \label{eq:summation_rep}
+  A_i = \sum\> A_j\> W(i,j)\>\> V_j
+\end{equation}
+
+Here $V_j$ is the volume of particle j, and $A_j$ is the interpolated
+property of particle j.
+
+\eqref{eq:summation_rep} can also be written interms of mass of the particle j
+as
+
+\begin{equation}
+  \label{eq:summation_mass_rep}
+  A_i = \sum\> \frac{m_j}{\rho_j} A_j\> W(i,j)
+\end{equation}
+
+Similarly the derivative of a field property can be written, interms
+of derivative of kernel function, rather than the derivative of field
+property as follows
+
+
+\section{Smoothing kernels}
+\label{sec:sk}
+
+
+In the present work cubic b-splpine kernel function is used
+for averaging the neighbourhood particle contribution. The kernel
+function can be written as
+
+\[
+  W_{cspline}(r, h) =
+  \begin{cases}
+    \frac{6 \> r^3}{h^3} - \frac{6 \> r^3}{h^2}, & 0 <= r <= \frac{h}{2}\\
+    2 * \big(1 - \frac{r}{h}\big)^3, & \frac{h}{2} <= r <= h\\
+    0,                                          & \text{otherwise}
+  \end{cases}
+\]
+
+
+\section{Approximating fluid equation of motion with SPH}
+\label{sec:fesph}
+
+Navier-Stokes equations are a set of partial differential equations
+that are used to describe the motion of fluids. These equations are
+used to model different types of scenarios like : air flow through
+cars, aeroplanes, and etcetera.  For fluid phase the following
+equations are used.
+
+The equatin of motion of a incompressible fluid in lagrangian view
+point can be written as
+
+\begin{equation}
+  \label{eq:momentum_eq}
+  \rho\> \frac{d\textbf{v}}{dt} = -\nabla p + \mu\> \nabla^2\textbf{v} + \textbf{f}
+\end{equation}
+
+Multiplying both sides by volume, we get
+\begin{equation}
+  \label{eq:momentum_eq}
+  m\>\frac{d\textbf{v}}{dt} = - V\> \nabla p + V\> \mu\> \nabla^2\textbf{v} + V\> \textbf{f}
+\end{equation}
+
+Using SPH the forces on a given particle can be easily computed. Then
+these ordinary differential equations can be solved using Euler or RK2
+or any other integrating scheme.
+
+\section{Density computation}
+\label{sec:density_comp}
+
+Density of a fluid particle in SPH can be computed using many approaches, like
+
+\begin{itemize}
+\item Summation density
+\item Continuity equation
+\end{itemize}
+
+SPH way of density computing is using summation density. It is derived from basic
+function interpolation in SPH. It could be derived as follows.
+
+From \eqref{eq:summation_mass_rep} we have,
+
+\begin{equation*}
+  \label{eq:summation_mass_rep}
+  A_i = \sum\> \frac{m_j}{\rho_j} A_j\> W(i,j)
+\end{equation*}
+
+Where, $A_i$ is the property we are interested in. Here it is density,
+by substituting $A_i$ with $\rho_i$ we have
+
+\begin{align}
+  \label{eq:summation_mass_rep}
+    \rho_i &= \sum\> \frac{m_j}{\rho_j} \rho_j\> W(i,j) \nonumber \\
+    \rho_i &= \sum\> m_j \> W(i,j)
+\end{align}
+
+
+
+% $$ \frac{d\rho}{dt} = -\rho \nabla * \textbf{v}$$
+% <br />
+
+% Discretized equations:
+% ----------------------
+% $$ \frac{d\rho_a}{dt} = \sum_{b}m_b \textbf{v}_{ab} * \nabla_a W_{ab}$$
+% <br />
+% $$ \frac{d\textbf{v}_a}{dt} = \textbf{g}_a  -\sum_{b}m_b \Bigg(\frac{p_a}{\rho^2_a} + \frac{p_b}{\rho^2_b}\Bigg) \nabla_a W_{ab}$$
+
+% Pressure equation:
+% ----------------------------------------------
+% ----------------------------------------------
+% The relationship between pressure and density of a particle is given by
+
+% $$ p_a = B \Bigg[\Bigg(\frac{\rho_a}{\rho_0}\Bigg)^\gamma - 1 \Bigg] $$
