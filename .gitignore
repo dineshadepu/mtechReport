@@ -18,6 +18,7 @@ sph_dem_report.pdf
 *.pdf
 *.un~
 .DS_Store
+repeat.sh
 
 *.png
 *.hdf5
