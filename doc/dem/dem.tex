@@ -155,7 +155,9 @@ the colliding particles and the material properties of the colliding
 particles.
 
 
-The normal ($\vec{F}_{nij}$) and tangential ($\vec{F}_{tij}$) components of the contact force ($\vec{F}_{ij}$) at time t can be written as
+The normal ($\vec{F}_{nij}$) and tangential ($\vec{F}_{tij}$)
+components of the contact force ($\vec{F}_{ij}$) at time t can be
+written as
 
 \begin{equation}
   \label{eq:normal_force}
@@ -166,6 +168,27 @@ The normal ($\vec{F}_{nij}$) and tangential ($\vec{F}_{tij}$) components of the 
   \label{eq:tang_force}
   \vec{F}_{tij} =  \vec{F}_{tij}^S +  \vec{F}_{tij}^D
 \end{equation}
+
+The normal spring force $\vec{F}_{nij}$ is computed from the overlap
+amount between the particles. This force is always repulsive in nature
+and it conserves the energy of the colliding particles.
+
+\begin{equation}
+  \label{eq:normal_spring_force}
+  \vec{F}_{nij}^S = k_n \> \delta_n \> \vec{n}_{ij}
+\end{equation}
+
+Since as discussed, when two particle collide there will be loss in
+energy due to friction, body deformation, rolling friciton and many
+more. To model such energy loss, we consider a single damping force,
+which depends on the coefficient of restitution between particles, and
+the force opposes the velocity. Such damping force can be written as
+
+\begin{equation}
+  \label{eq:normal_damping_force}
+  \vec{F}_{nij}^D = -\eta_n  (\vec{V}_{ij} \cdot \vec{n}_{ij}) \> \vec{n}_{ij}
+\end{equation}
+
 
 
 
