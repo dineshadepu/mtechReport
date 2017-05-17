@@ -148,11 +148,25 @@ two particles collide, there will be a repulsion force on both the
 particles. This repulsive force is represented by springs, whose
 magnitude depends on the overlap amount. Similarly, when a collision
 occurs, there will be damping of energy due to deformation of the body
-and the friction force between the particles. This damping is
-introduced by the dashpot between the particles. The respective spring
-and damping coefficients depend on the coefficient of restitution
-between the colliding particles and the material properties of the
-colliding particles.
+and the friction force between the particles. This damping is taken
+care by the dashpot between the particles. The respective spring and
+damping coefficients depend on the coefficient of restitution between
+the colliding particles and the material properties of the colliding
+particles.
+
+
+The normal ($\vec{F}_{nij}$) and tangential ($\vec{F}_{tij}$) components of the contact force ($\vec{F}_{ij}$) at time t can be written as
+
+\begin{equation}
+  \label{eq:normal_force}
+  \vec{F}_{nij} =  \vec{F}_{nij}^S +  \vec{F}_{nij}^D
+\end{equation}
+
+\begin{equation}
+  \label{eq:tang_force}
+  \vec{F}_{tij} =  \vec{F}_{tij}^S +  \vec{F}_{tij}^D
+\end{equation}
+
 
 
 
