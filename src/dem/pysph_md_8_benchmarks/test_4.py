@@ -61,7 +61,7 @@ class FluidStructureInteration(Application):
 
         # velocity assigning
         Vmag = 3.9
-        thet = 10
+        thet = 60
         theta = thet * np.pi / 180.
         u = Vmag * np.sin(theta) * np.ones_like(x)
         v = -Vmag * np.cos(theta) * np.ones_like(x)
@@ -87,9 +87,9 @@ class FluidStructureInteration(Application):
 
         integrator = EPECIntegrator(sand=DEMStep())
 
-        dt = 1e-6
+        dt = 1e-7
         print("DT: %s" % dt)
-        tf = 0.003
+        tf = 0.0015
         solver = Solver(kernel=kernel, dim=2, integrator=integrator, dt=dt,
                         tf=tf, adaptive_timestep=False)
 
@@ -116,7 +116,7 @@ class FluidStructureInteration(Application):
         y1 = []
         for solver_data, sand, wall in iter_output(files, 'sand', 'wall'):
             t.append(solver_data['t'])
-            y1.append(-sand.wz[0])
+            y1.append(sand.wz[0])
         print("Done")
         print(y1[-1])
     # def pre_step(self, solver):
