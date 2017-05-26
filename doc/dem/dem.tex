@@ -169,13 +169,13 @@ written as
   \vec{F}_{tij} =  \vec{F}_{tij}^S +  \vec{F}_{tij}^D
 \end{equation}
 
-The normal spring force $\vec{F}_{nij}$ is computed from the overlap
+In a linear force, normal spring force $\vec{F}_{nij}$ is computed from the overlap
 amount between the particles. This force is always repulsive in nature
 and it conserves the energy of the colliding particles.
 
 \begin{equation}
   \label{eq:normal_spring_force}
-  \vec{F}_{nij}^S = k_n \> \delta_n \> \vec{n}_{ij}
+  \vec{F}_{nij}^S = -k_n \> \delta_n \> \vec{n}_{ij}
 \end{equation}
 
 Since as discussed, when two particle collide there will be loss in
@@ -190,7 +190,103 @@ the force opposes the velocity. Such damping force can be written as
 \end{equation}
 
 
+Tangential spring force is calculated in a different way. At the
+instantiation of the a spring is attached in tangential direction, and
+as time proceeds, the elongation of the spring is noted. At every time
+step depending on the displacement of the spring the force is
+computed.
 
+\begin{equation}
+  \label{eq:tang_spring_force}
+  \vec{F}_{tij}^S = -k_t \> \vec{\delta_t}
+\end{equation}
+
+Where $ \vec{\delta_t} $ at the instantiation of the contact
+can be written as
+
+\begin{equation}
+  \label{eq:tang_disp}
+ \vec{\delta_t} = \vec{V}_{tij} \> \Delta t
+\end{equation}
+
+And after time $\Delta t$
+
+\begin{equation}
+  \label{eq:tang_disp}
+ \vec{\delta}_{t + \Delta t} = \vec{\delta}_{t} + \vec{V}_{tij} \> \Delta t
+\end{equation}
+
+Where as tangential damping force is similar to normal damping force, which can be
+written as
+
+\begin{equation}
+  \label{eq:tang_damp_force}
+  \vec{F}_{tij}^D = -\eta_t \> \vec{V}_{tij}
+\end{equation}
+
+With such a tangential law, the force opposing the motion will increase indefinitely,
+to make it finite, Coloumb condition is applied. It is given as follows
+
+\begin{equation}
+  \label{eq:coloumb}
+  |\vec{F}_{tij}| > \mu \> |\vec{F}_{nij}|
+\end{equation}
+
+where $\mu$ is coefficient of friciton.
+
+\subsection{Computing normal and tangential coefficients}
+
+We defined the force laws between two colliding spheres, these forces are
+dependenet on the spring and dashpot coefficients. These are computed as follows,
+Generally while defining collisoin, material properties and coefficient of restitution is
+specified, using these values, we need to come up with the coefficients.
+
+In linear force model from MFIX DEM we have normal coefficient of restitution as
+\begin{equation}
+  \label{eq:damping_coefficient}
+  \eta_{n} = \frac{2 \> \sqrt{m_{eff}k_{n}}|\ln e_n|}{\sqrt{\pi^2 + \ln^2e_{n}}}
+\end{equation}
+
+
+\section{Particle Wall collision}
+\label{sec:PWColl}
+
+Till now particle particle collsion is modelled. Particle wall
+collision can be modelled in the following way. A point and normal to
+the wall is need to be defined \ref{fig:wall_description}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=2.]{dem/wall_description}
+  \caption{Describing a wall in DEM Simulation}
+  \label{fig:wall_description}
+\end{figure}
+
+
+After defining a wall, to check if a given particle of radius r in
+contact with the palne the following condition is to be satisfied.
+
+Say that $\vec{n}_w$ is the normal for wall, and the vector joining
+the wall point and the particle is $\vec{r}_{wi}$. The perpendicular
+distance between wall and the particle can be computed using
+
+\begin{align}
+  \label{eq:perpendicular_dist}
+    Perpendicular Distance(PR) =  \vec{r}_{wi} \cdot  \vec{n}_w
+\end{align}
+
+If $r - PR $ is positive, then the particle is overlapping the wall,
+such $r - PR$ is the overlap amount. Where $r$ is the radius of the
+particle\ref{fig:particle_wall_collision}. From such overlap amount
+and material properties force on the particle can be computed using
+\eqref{eq:normal_force} and \eqref{eq:tangential_force}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=1.5]{dem/particle_wall_collision.png}
+  \caption{Particle and wall colliding}
+  \label{fig:particle_wall_collision}
+\end{figure}
 
 
 %%
