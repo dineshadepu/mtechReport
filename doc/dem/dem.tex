@@ -1,7 +1,7 @@
 \chapter{Discrete Element Method}
 
 It is a numerical method introduced by Cundall and Strack \citep{CS79}
-used to model the behaviour of large number of particles having finite
+used to model the behavior of large number of particles having finite
 mass and radius which interact at their surfaces. The governing
 equation of motion for such a particle can be written using Newton's
 laws.
@@ -65,7 +65,7 @@ and follows a straight line path.
 Now assume that there is a wall obstructing the motion of this
 spherical ball.  As the ball hits the wall it has to bounce back
 \eqref{fig:bounce_back}, because of the repulsion force from the
-wall. There are two ways to model such a behaviour.
+wall. There are two ways to model such a behavior.
 
 \begin{itemize}
 \item Event driven method (hard particles)
@@ -83,7 +83,7 @@ In this method at every instant of time the ball is checked if it is
 in contact with any other particle or wall. If it is, then the force
 is computed from the relative positions of the overlapping
 particles. By using such force($\vec{F}$) \eqref{eq:newton_equation_of_motion} is
-integrated using Euler or RK2.
+integrated using Euler or ARK2.
 
 \subsection{Force calculation}
 \label{sec:force}
@@ -165,7 +165,7 @@ written as
 \end{equation}
 
 \begin{equation}
-  \label{eq:tang_force}
+  \label{eq:tangential_force}
   \vec{F}_{tij} =  \vec{F}_{tij}^S +  \vec{F}_{tij}^D
 \end{equation}
 
@@ -179,7 +179,7 @@ and it conserves the energy of the colliding particles.
 \end{equation}
 
 Since as discussed, when two particle collide there will be loss in
-energy due to friction, body deformation, rolling friciton and many
+energy due to friction, body deformation, rolling friction and many
 more. To model such energy loss, we consider a single damping force,
 which depends on the coefficient of restitution between particles, and
 the force opposes the velocity. Such damping force can be written as
@@ -232,13 +232,13 @@ to make it finite, Coloumb condition is applied. It is given as follows
   |\vec{F}_{tij}| > \mu \> |\vec{F}_{nij}|
 \end{equation}
 
-where $\mu$ is coefficient of friciton.
+where $\mu$ is coefficient of friction.
 
 \subsection{Computing normal and tangential coefficients}
 
 We defined the force laws between two colliding spheres, these forces are
-dependenet on the spring and dashpot coefficients. These are computed as follows,
-Generally while defining collisoin, material properties and coefficient of restitution is
+dependent on the spring and dashpot coefficients. These are computed as follows,
+Generally while defining collision, material properties and coefficient of restitution is
 specified, using these values, we need to come up with the coefficients.
 
 In linear force model from MFIX DEM we have normal coefficient of restitution as
@@ -251,7 +251,7 @@ In linear force model from MFIX DEM we have normal coefficient of restitution as
 \section{Particle Wall collision}
 \label{sec:PWColl}
 
-Till now particle particle collsion is modelled. Particle wall
+Till now particle  collision is modelled. Particle wall
 collision can be modelled in the following way. A point and normal to
 the wall is need to be defined \ref{fig:wall_description}
 
@@ -264,7 +264,7 @@ the wall is need to be defined \ref{fig:wall_description}
 
 
 After defining a wall, to check if a given particle of radius r in
-contact with the palne the following condition is to be satisfied.
+contact with the Paine the following condition is to be satisfied.
 
 Say that $\vec{n}_w$ is the normal for wall, and the vector joining
 the wall point and the particle is $\vec{r}_{wi}$. The perpendicular
@@ -289,6 +289,16 @@ and material properties force on the particle can be computed using
 \end{figure}
 
 
+\section{Rigid body dynamics modelling using DEM}
+\label{sec:rigid_body_dem}
+
+Till now modelling of distinct particles is discussed. This method could be
+extended to model rigid body collisions seamlessly. In the present work
+2d rigid body dynamics is studied and discussed.
+
+Physically, rigid body has a continuous mass(M) with arbitrary shape.
+
+
 %%
 
 
@@ -296,3 +306,5 @@ and material properties force on the particle can be computed using
 %%% mode: latex
 %%% TeX-master: "../mainrep"
 %%% End:
+
+%  LocalWords:  discretized
