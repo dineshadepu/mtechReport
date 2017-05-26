@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="New document 1">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;">
+      <path
+         id="path3787"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lstart"
+       style="overflow:visible">
+      <path
+         id="path3784"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt"
+         transform="scale(0.8) translate(12.5,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="310.16384"
+     inkscape:cy="534.02933"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1366"
+     inkscape:window-height="744"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="184.60538"
+       y="646.02832"
+       id="text4224"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4226"
+         x="184.60538"
+         y="646.02832" /></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.62899542px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 65.412104,585.21932 c 105.125936,0 105.408536,0 105.408536,0"
+       id="path2988"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.64103758px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Lend)"
+       d="m 107.5,585.04166 0,-32.28082"
+       id="path2990"
+       inkscape:connector-curvature="0" />
+    <path
+       sodipodi:type="arc"
+       style="fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.5, 1;stroke-dashoffset:0"
+       id="path2998"
+       sodipodi:cx="206.78572"
+       sodipodi:cy="653.43359"
+       sodipodi:rx="9.2857141"
+       sodipodi:ry="9.2857141"
+       d="m 216.07143,653.43359 a 9.2857141,9.2857141 0 1 1 -18.57142,0 9.2857141,9.2857141 0 1 1 18.57142,0 z"
+       transform="translate(-99.285714,-68.571429)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.45180741;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.45180741, 0.45180741;stroke-dashoffset:0;marker-start:url(#Arrow1Lstart)"
+       d="m 107.81742,585.98318 c 13.43042,14.84285 13.58392,15.01248 13.58392,15.01248"
+       id="path3778"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="121.18009"
+       y="598.92267"
+       id="text4228"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4230"
+         x="121.18009"
+         y="598.92267">Wall point</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="109.31078"
+       y="554.72845"
+       id="text4782"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4784"
+         x="109.31078"
+         y="554.72845">Normal to wall</tspan></text>
+    <g
+       id="g8849"
+       inkscape:export-filename="/home/dinesh/iitbreport/doc/dem/particle_wall_collision.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300">
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.98982739px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 279.66077,586.64789 c 260.33578,0 261.03559,0 261.03559,0"
+         id="path4798"
+         inkscape:connector-curvature="0" />
+      <g
+         id="g8811">
+        <path
+           inkscape:connector-curvature="0"
+           id="path4800"
+           d="m 304.64285,586.57802 0,-21.42497"
+           style="fill:none;stroke:#000000;stroke-width:0.4254604px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow1Lend)" />
+        <path
+           d="m 216.07143,653.43359 c 0,5.12836 -4.15735,9.28572 -9.28571,9.28572 -5.12836,0 -9.28571,-4.15736 -9.28571,-9.28572 0,-5.12835 4.15735,-9.28571 9.28571,-9.28571 5.12836,0 9.28571,4.15736 9.28571,9.28571 z"
+           sodipodi:ry="9.2857141"
+           sodipodi:rx="9.2857141"
+           sodipodi:cy="653.43359"
+           sodipodi:cx="206.78572"
+           id="path4802"
+           style="fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.5, 1;stroke-dashoffset:0"
+           sodipodi:type="arc"
+           transform="translate(97.857144,-67.142858)" />
+        <path
+           inkscape:connector-curvature="0"
+           id="path4804"
+           d="m 304.96027,587.41175 c 13.43042,14.84285 13.58392,15.01248 13.58392,15.01248"
+           style="fill:none;stroke:#000000;stroke-width:0.45180741;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.45180741, 0.45180741;stroke-dashoffset:0;marker-start:url(#Arrow1Lstart)" />
+        <text
+           sodipodi:linespacing="125%"
+           id="text4806"
+           y="600.3512"
+           x="318.32294"
+           style="font-size:4px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           xml:space="preserve"><tspan
+             y="600.3512"
+             x="318.32294"
+             id="tspan4808"
+             sodipodi:role="line">Wall point</tspan></text>
+        <text
+           sodipodi:linespacing="125%"
+           id="text4810"
+           y="569.19269"
+           x="306.45364"
+           style="font-size:4px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           xml:space="preserve"><tspan
+             y="569.19269"
+             x="306.45364"
+             id="tspan4812"
+             sodipodi:role="line">Normal to wall</tspan></text>
+        <path
+           sodipodi:type="arc"
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+           id="path4814"
+           sodipodi:cx="514.28571"
+           sodipodi:cy="565.2193"
+           sodipodi:rx="10"
+           sodipodi:ry="10"
+           d="m 524.28571,565.2193 c 0,5.52285 -4.47716,10 -10,10 -5.52285,0 -10,-4.47715 -10,-10 0,-5.52285 4.47715,-10 10,-10 5.52284,0 10,4.47715 10,10 z"
+           transform="translate(-105,-13.928572)" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:0.51999998;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.52, 1.56;stroke-dashoffset:0;marker-start:none;marker-end:url(#Arrow1Lend)"
+           d="m 304.46428,586.46932 c 105,-34.82143 105,-34.82143 105,-34.82143"
+           id="path4816"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Lstart);marker-end:url(#Arrow1Lend);stroke-miterlimit:4;stroke-dasharray:0.2,0.2;stroke-dashoffset:0"
+           d="m 410.17856,586.63986 0,-34.22721"
+           id="path5378"
+           inkscape:connector-curvature="0" />
+        <text
+           xml:space="preserve"
+           style="font-size:4px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           x="413.21429"
+           y="569.505"
+           id="text5380"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             x="413.21429"
+             y="569.505"
+             id="tspan5384">Perpendicular distance</tspan><tspan
+             sodipodi:role="line"
+             x="413.21429"
+             y="574.505"
+             id="tspan5388"> between wall and particle</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:4px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           x="350.71429"
+           y="573.79071"
+           id="text5390"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan5392"
+             x="350.71429"
+             y="573.79071">Vector from wall to</tspan><tspan
+             sodipodi:role="line"
+             x="350.71429"
+             y="578.79071"
+             id="tspan5394">Particle</tspan></text>
+        <path
+           transform="translate(-11.071426,15.714285)"
+           d="m 524.28571,565.2193 c 0,5.52285 -4.47716,10 -10,10 -5.52285,0 -10,-4.47715 -10,-10 0,-5.52285 4.47715,-10 10,-10 5.52284,0 10,4.47715 10,10 z"
+           sodipodi:ry="10"
+           sodipodi:rx="10"
+           sodipodi:cy="565.2193"
+           sodipodi:cx="514.28571"
+           id="path5404"
+           style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+           sodipodi:type="arc" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.5, 0.5;stroke-dashoffset:0;marker-start:none;marker-end:url(#Arrow1Lend)"
+           d="m 304.50917,586.8762 198.24244,-5.55584"
+           id="path5408"
+           inkscape:connector-curvature="0" />
+        <rect
+           style="fill:none;stroke:#000000;stroke-width:0.25943607;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.2594361, 0.2594361;stroke-dashoffset:0"
+           id="rect5981"
+           width="29.169138"
+           height="29.526281"
+           x="489.87973"
+           y="566.52765" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.5, 0.5;stroke-dashoffset:0;marker-start:none;marker-end:url(#Arrow1Lend)"
+           d="M 497.5,565.93361 C 496.42857,564.50504 481.78572,536.6479 481.78572,536.6479"
+           id="path7972"
+           inkscape:connector-curvature="0" />
+        <g
+           id="g8712"
+           transform="translate(6.4285714,12.142857)">
+          <g
+             transform="translate(-116.16754,2.0203051)"
+             id="g7756">
+            <path
+               sodipodi:type="arc"
+               style="fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+               id="path5989"
+               sodipodi:cx="548.39288"
+               sodipodi:cy="477.54074"
+               sodipodi:rx="28.392857"
+               sodipodi:ry="28.392857"
+               d="m 576.78574,477.54074 c 0,15.68094 -12.71191,28.39286 -28.39286,28.39286 -15.68094,0 -28.39285,-12.71192 -28.39285,-28.39286 0,-15.68094 12.71191,-28.39286 28.39285,-28.39286 15.68095,0 28.39286,12.71192 28.39286,28.39286 z" />
+            <path
+               style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+               d="m 492.5,495.93361 108.92857,0.35714"
+               id="path5991"
+               inkscape:connector-curvature="0" />
+            <path
+               style="fill:none;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+               d="m 548.92857,506.29075 52.32143,0"
+               id="path6001"
+               inkscape:connector-curvature="0" />
+            <path
+               style="fill:none;stroke:#000000;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Lstart)"
+               d="m 548.21429,478.61218 -54.64286,7.14286"
+               id="path6022"
+               inkscape:connector-curvature="0" />
+            <path
+               style="fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.1, 0.1;stroke-dashoffset:0;marker-start:none;marker-end:url(#Arrow1Lend)"
+               d="m 585.75894,486.29075 0,9.64286"
+               id="path6210"
+               inkscape:connector-curvature="0" />
+            <path
+               inkscape:connector-curvature="0"
+               id="path6952"
+               d="m 585.88521,506.36753 0,9.64286"
+               style="fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.1, 0.1;stroke-dashoffset:0;marker-start:url(#Arrow1Lstart);marker-end:none" />
+            <text
+               xml:space="preserve"
+               style="font-size:4px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+               x="584.64288"
+               y="502.18362"
+               id="text7692"
+               sodipodi:linespacing="125%"><tspan
+                 sodipodi:role="line"
+                 id="tspan7694"
+                 x="584.64288"
+                 y="502.18362">δ overlap</tspan></text>
+          </g>
+          <path
+             style="fill:none;stroke:#000000;stroke-width:0.10852657;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Lstart);marker-end:url(#Arrow1Lend)"
+             d="m 431.89684,497.51914 0,-15.33733"
+             id="path7774"
+             inkscape:connector-curvature="0" />
+          <text
+             xml:space="preserve"
+             style="font-size:4px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+             x="443.53903"
+             y="470.7858"
+             id="text7776"
+             sodipodi:linespacing="125%"><tspan
+               sodipodi:role="line"
+               x="443.53903"
+               y="470.7858"
+               id="tspan7778">Perpendicular distance</tspan><tspan
+               sodipodi:role="line"
+               x="443.53903"
+               y="475.7858"
+               id="tspan7780"> between wall and particle</tspan></text>
+          <path
+             inkscape:connector-curvature="0"
+             id="path7786"
+             d="M 432.67857,489.86218 C 434.10714,489.50504 451.25,477.18361 451.25,477.18361"
+             style="fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.1, 0.1;stroke-dashoffset:0;marker-end:url(#Arrow1Lend)" />
+          <rect
+             y="436.28079"
+             x="369.6329"
+             height="86.448479"
+             width="127.51991"
+             id="rect8710"
+             style="fill:none;stroke:#000000;stroke-width:0.48009145;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.48009145, 0.48009145;stroke-dashoffset:0" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
