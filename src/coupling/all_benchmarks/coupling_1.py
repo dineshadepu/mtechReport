@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # PySPH base and carray imports
-from pysph.base.utils import get_particle_array_wcsph
+from pysph.base.utils import get_particle_array_wcsph, get_particle_array_rigid_body
 from pysph.base.kernels import CubicSpline
 
 from pysph.solver.solver import Solver
@@ -19,10 +19,10 @@ from pysph.sph.basic_equations import (XSPHCorrection, ContinuityEquation,)
 from pysph.sph.wc.basic import TaitEOS, MomentumEquation
 from pysph.solver.application import Application
 from pysph.sph.rigid_body import (BodyForce, RigidBodyCollision,
+                                  SolidFluidForce,
                                   NumberDensity, RigidBodyMoments,
                                   RigidBodyMotion, RK2StepRigidBody,
                                   PressureRigidBody)
-
 
 
 def create_boundary():
@@ -66,15 +66,28 @@ def create_fluid():
     return xf*1e-3, yf*1e-3
 
 
-def create_cube():
-    dx = 2
-    x = np.arange(65, 75, dx)
-    y = np.arange(135, 145, dx)
+def create_cube(dx=1):
+    x = np.arange(60, 80, dx)
+    y = np.arange(131, 151, dx)
     x, y = np.meshgrid(x, y)
     x = x.ravel()
     y = y.ravel()
 
     return x*1e-3, y*1e-3
+
+
+def get_density(y):
+    c_0 = 2 * np.sqrt(2 * 9.81 * 130 * 1e-3)
+    rho_0 = 1000
+    height_water_clmn = 130 * 1e-3
+    gamma = 7.
+    _tmp = gamma / (rho_0 * c_0**2)
+
+    rho = np.zeros_like(y)
+    for i in range(len(rho)):
+        p_i = rho_0 * 9.81 * (height_water_clmn - y[i])
+        rho[i] = rho_0 * (1 + p_i * _tmp)**(1. / gamma)
+    return rho
 
 
 def geometry():
@@ -102,7 +115,8 @@ class FluidStructureInteration(Application):
         """Create the circular patch of fluid."""
         # xf, yf = create_fluid_with_solid_cube()
         xf, yf = create_fluid()
-        m = np.ones_like(xf) * self.m
+        rho = get_density(yf)
+        m = rho[:] * self.dx * self.dx
         rho = np.ones_like(xf) * self.ro
         h = np.ones_like(xf) * self.hdx * self.dx
         fluid = get_particle_array_wcsph(x=xf, y=yf, h=h, m=m, rho=rho,
@@ -111,16 +125,17 @@ class FluidStructureInteration(Application):
         xt, yt = create_boundary()
         m = np.ones_like(xt) * 1000 * self.dx * self.dx
         rho = np.ones_like(xt) * 1000
-        h = np.ones_like(xt) * self.hdx * self.dx / 2.
+        h = np.ones_like(xt) * self.hdx * self.dx
         tank = get_particle_array_wcsph(x=xt, y=yt, h=h, m=m, rho=rho,
                                         name="tank")
 
-        xc, yc = create_cube()
-        m = np.ones_like(xc) * 1500 * self.dx * self.dx
+        dx = 1
+        xc, yc = create_cube(1)
+        m = np.ones_like(xc) * 1200 * dx*1e-3 * dx*1e-3
         rho = np.ones_like(xc) * 1500
         h = np.ones_like(xc) * self.hdx * self.dx
-        cube = get_particle_array_wcsph(x=xc, y=yc, h=h, m=m, rho=rho,
-                                        name="cube")
+        cube = get_particle_array_rigid_body(x=xc, y=yc, h=h, m=m, rho=rho,
+                                             name="cube")
         return [fluid, tank, cube]
 
     def create_solver(self):
@@ -141,8 +156,8 @@ class FluidStructureInteration(Application):
         equations = [
             Group(equations=[
                     BodyForce(dest='cube', sources=None, gy=-9.81),
-                    NumberDensity(dest='cube', sources=['cube']),
-                    ], ),
+                    # NumberDensity(dest='cube', sources=['cube']),
+                    ], real=False),
 
             Group(equations=[
                 TaitEOS(dest='fluid', sources=None, rho0=self.ro, c0=self.co,
@@ -161,11 +176,11 @@ class FluidStructureInteration(Application):
                 MomentumEquation(dest='fluid', sources=['fluid', 'tank'],
                                  alpha=self.alpha, beta=0.0, c0=self.co,
                                  gy=-9.81),
-                PressureRigidBody(dest='fluid', sources=['cube'],
-                                  rho0=1500),
+                SolidFluidForce(dest='fluid', sources=['cube'],),
+                # PressureRigidBody(dest='fluid', sources=['cube'],
+                #                   rho0=1500),
 
-                XSPHCorrection(dest='fluid', sources=['fluid', 'tank',
-                                                      'cube']),
+                XSPHCorrection(dest='fluid', sources=['fluid', 'tank']),
             ]),
             Group(equations=[RigidBodyMoments(dest='cube', sources=None)]),
             Group(equations=[RigidBodyMotion(dest='cube', sources=None)]),
