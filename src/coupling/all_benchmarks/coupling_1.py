@@ -126,15 +126,18 @@ class FluidStructureInteration(Application):
         m = np.ones_like(xt) * 1000 * self.dx * self.dx
         rho = np.ones_like(xt) * 1000
         h = np.ones_like(xt) * self.hdx * self.dx
+        rad_s = np.ones_like(xt) * 2 / 2. * 1e-3
         tank = get_particle_array_wcsph(x=xt, y=yt, h=h, m=m, rho=rho,
-                                        name="tank")
+                                        name="tank", rad_s=rad_s)
 
         dx = 1
         xc, yc = create_cube(1)
-        m = np.ones_like(xc) * 1200 * dx*1e-3 * dx*1e-3
-        rho = np.ones_like(xc) * 1500
+        m = np.ones_like(xc) * 2120 * dx*1e-3 * dx*1e-3
+        rho = np.ones_like(xc) * 2120
         h = np.ones_like(xc) * self.hdx * self.dx
+        rad_s = np.ones_like(xc) * dx / 2. * 1e-3
         cube = get_particle_array_rigid_body(x=xc, y=yc, h=h, m=m, rho=rho,
+                                             rad_s=rad_s,
                                              name="cube")
         return [fluid, tank, cube]
 
@@ -182,6 +185,8 @@ class FluidStructureInteration(Application):
 
                 XSPHCorrection(dest='fluid', sources=['fluid', 'tank']),
             ]),
+            Group(equations=[RigidBodyCollision(dest='cube', sources=['tank'],
+                                                kn=1e5)]),
             Group(equations=[RigidBodyMoments(dest='cube', sources=None)]),
             Group(equations=[RigidBodyMotion(dest='cube', sources=None)]),
         ]
