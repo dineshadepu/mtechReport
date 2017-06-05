@@ -18,6 +18,11 @@ from pysph.sph.equation import Group
 from pysph.sph.basic_equations import (XSPHCorrection, ContinuityEquation,)
 from pysph.sph.wc.basic import TaitEOS, MomentumEquation
 from pysph.solver.application import Application
+from pysph.sph.rigid_body import (BodyForce, RigidBodyCollision,
+                                  NumberDensity, RigidBodyMoments,
+                                  RigidBodyMotion, RK2StepRigidBody,
+                                  PressureRigidBody)
+
 
 
 def create_boundary():
@@ -61,6 +66,17 @@ def create_fluid():
     return xf*1e-3, yf*1e-3
 
 
+def create_cube():
+    dx = 2
+    x = np.arange(65, 75, dx)
+    y = np.arange(135, 145, dx)
+    x, y = np.meshgrid(x, y)
+    x = x.ravel()
+    y = y.ravel()
+
+    return x*1e-3, y*1e-3
+
+
 def geometry():
     # please run this function to know how
     # geometry looks like
@@ -99,12 +115,19 @@ class FluidStructureInteration(Application):
         tank = get_particle_array_wcsph(x=xt, y=yt, h=h, m=m, rho=rho,
                                         name="tank")
 
-        return [fluid, tank]
+        xc, yc = create_cube()
+        m = np.ones_like(xc) * 1500 * self.dx * self.dx
+        rho = np.ones_like(xc) * 1500
+        h = np.ones_like(xc) * self.hdx * self.dx
+        cube = get_particle_array_wcsph(x=xc, y=yc, h=h, m=m, rho=rho,
+                                        name="cube")
+        return [fluid, tank, cube]
 
     def create_solver(self):
         kernel = CubicSpline(dim=2)
 
-        integrator = EPECIntegrator(fluid=WCSPHStep(), tank=WCSPHStep())
+        integrator = EPECIntegrator(fluid=WCSPHStep(), tank=WCSPHStep(),
+                                    cube=RK2StepRigidBody())
 
         dt = 0.125 * self.dx * self.hdx / (self.co * 1.1) / 2.
         print("DT: %s" % dt)
@@ -117,23 +140,35 @@ class FluidStructureInteration(Application):
     def create_equations(self):
         equations = [
             Group(equations=[
+                    BodyForce(dest='cube', sources=None, gy=-9.81),
+                    NumberDensity(dest='cube', sources=['cube']),
+                    ], ),
+
+            Group(equations=[
                 TaitEOS(dest='fluid', sources=None, rho0=self.ro, c0=self.co,
                         gamma=7.0),
                 TaitEOS(dest='tank', sources=None, rho0=self.ro, c0=self.co,
                         gamma=7.0),
             ], real=False),
+
             Group(equations=[
                 ContinuityEquation(
                     dest='fluid',
-                    sources=['fluid', 'tank'],),
+                    sources=['fluid', 'tank', 'cube'],),
                 ContinuityEquation(
                     dest='tank',
-                    sources=['fluid', 'tank'], ),
+                    sources=['fluid', 'tank', 'cube'], ),
                 MomentumEquation(dest='fluid', sources=['fluid', 'tank'],
                                  alpha=self.alpha, beta=0.0, c0=self.co,
                                  gy=-9.81),
-                XSPHCorrection(dest='fluid', sources=['fluid', 'tank']),
+                PressureRigidBody(dest='fluid', sources=['cube'],
+                                  rho0=1500),
+
+                XSPHCorrection(dest='fluid', sources=['fluid', 'tank',
+                                                      'cube']),
             ]),
+            Group(equations=[RigidBodyMoments(dest='cube', sources=None)]),
+            Group(equations=[RigidBodyMotion(dest='cube', sources=None)]),
         ]
         return equations
 
