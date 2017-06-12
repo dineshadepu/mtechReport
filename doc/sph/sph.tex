@@ -5,48 +5,269 @@ In the present work Smoothed Particle Hydrodynamics (SPH), a particle based
 framework is used to study the fluid motion, using Navier-stokes
 equation as basis for fluid motion.
 
+
+\section{Introduction to SPH}
+
+
+It is invented by \cite{lucy1977numerical} and
+\cite{gingold1977smoothed} independently to model astrophysical
+simulations. The basic idea of SPH is representing a field variable
+A from known values of A through interpolation integrals in the given
+domain. This could be written in terms of Dirac delta function as follows
+
+\begin{equation}
+  \label{eq:dirac_repr}
+  A(\boldsymbol{x}) = \int_{\Omega}\> A(\boldsymbol{x}') \> \delta(\boldsymbol{x} - \boldsymbol{x}') \> d\boldsymbol{x}'
+\end{equation}
+
+Where x is the point of interest in the domain, $\omega$ is volume of
+the domain and $d\boldsymbol{x}'$ is the differential volume element.
+To prove that the above equation \eqref{eq:dirac_repr} interpolates the
+field variable correctly, since Dirac delta function is zero except at
+$\boldsymbol{x}$, and at $\boldsymbol{x}$ A is constant, so one can take
+A out of the integral, which gives us the value at $\boldsymbol{x}$.
+
+
+\begin{align*}
+  \label{eq:dirac_derivation}
+  A(\boldsymbol{x}) &= \int_{\Omega}\> A(\boldsymbol{x}') \> \delta(\boldsymbol{x} - \boldsymbol{x}') \> d\boldsymbol{x}'\\
+  A(\boldsymbol{x}) &= A(\boldsymbol{x}) \int_{\Omega}\> \> \delta(\boldsymbol{x} - \boldsymbol{x}') \> d\boldsymbol{x}'\\
+  A(\boldsymbol{x}) &= A(\boldsymbol{x}) \\
+\end{align*}
+
+A can be approximated by replacing the delta function with a smoothing
+kernel W, with smoothing length h. Resulting interpolation equation is given by
+
+\begin{equation}
+  \label{eq:kernel_repr}
+  A(\boldsymbol{x}) = \int_{\Omega}\> A(\boldsymbol{x}') \> W(\boldsymbol{x} - \boldsymbol{x}', h)  \> d\boldsymbol{x}'
+\end{equation}
+
+The smoothing function W is usually chosen to be as even function
+satisfying few properties.
+
+The first condition is Unity condition:
+
+\begin{equation}
+  \label{eq:unity}
+  \int_{\Omega}\> W(\boldsymbol{x} - \boldsymbol{x}', h)  \> d\boldsymbol{x}' = 1
+\end{equation}
+
+The second condition is kernel function W behaving like delta function
+as the influence length h goes to 0. Since delta function has infinite
+value at a single point and zero at rest, similarly when the influence
+length of the kernel function goes to zero, it should behave like
+delta function.
+
+\begin{equation}
+  \label{eq:kernel_delta}
+  \lim_{h \to 0} W(\boldsymbol{x} - \boldsymbol{x}', h) = \delta(\boldsymbol{x} - \boldsymbol{x}', h)
+\end{equation}
+
+And the third condition is having a compact support. As discussed before
+that the kernel function has a support, and out of that support the value of
+it has to be zero. It is given by \eqref{eq:compact_support}
+
+\begin{equation}
+  \label{eq:compact_support}
+  W(\boldsymbol{x} - \boldsymbol{x}', h) = 0 \>\>\>\>    when  \>\>\> |\boldsymbol{x} - \boldsymbol{x}'| > kh
+\end{equation}
+
+Where k depends on the smoothing kernel chosen.
+
+Changing continuous form of \eqref{eq:kernel_repr} to particle form using
+the particles in the domain of interest.
+
+Assume that the domain is discretized into N particles with mass $m_i$ and volume
+$dv_i$. We have
+
+\begin{equation}
+  \label{eq:mass_repr}
+  m_j = dv_i \> \rho_i
+\end{equation}
+
+Using \eqref{eq:mass_repr}, \eqref{eq:kernel_repr} is converted to
+discrete form as follows
+
+\begin{equation}
+  \label{eq:discrete_form}
+  A_i = \sum\> \frac{m_j}{\rho_j} A_j\> W(\boldsymbol{x}_i - \boldsymbol{x}_j, h)
+\end{equation}
+
+Where $A_i$ is the value of the field property of particle i,
+similarly for $A_j$.
+
+Similarly derivative of a field variable can be written as
+
+\begin{equation}
+  \label{eq:discrete_derivative}
+  A_i = \sum\> \frac{m_j}{\rho_j} A_j\> \nabla W(\boldsymbol{x}_i - \boldsymbol{x}_j, h)
+\end{equation}
+
+
+\section{Fluid equations of motion}
+
+Navier-Stokes equations are a set of partial differential equations
+that are used to describe the motion of fluids. These equations are
+used to model different types of scenarios like : air flow through
+cars, aeroplanes, and etcetera.  For fluid phase the following
+equations are used.
+
+The equation of motion is given by
+
+
+\begin{equation}
+  \label{eq:momentum_eq}
+  \rho \>\frac{d\textbf{v}}{dt} = - \nabla p + \mu\> \nabla^2\textbf{v} + \textbf{f}
+\end{equation}
+
+Where \textbf{v} is flow velocity, $\rho$ is density, p is the
+pressure and \textbf{f} is body force. In order to compute the right
+hand side of \eqref{eq:momentum_eq} we need information, such as
+density of the fluid, and pressure at every time step, which could be
+obtained using other equations.
+
+
+In Lagrangian point of view  \eqref{eq:momentum_eq} is written as
+
+\begin{equation}
+  \label{eq:momentum_eq}
+  \rho \>\frac{\partial\textbf{v}}{\partial t} = - \nabla p + \mu\> \nabla^2\textbf{v} + \textbf{f}
+\end{equation}
+
+This could be written in terms of forces acting on a particle with mass m as
+
+\begin{equation*}
+  \label{eq:forces_eq}
+  m_i \>\frac{\partial\textbf{v}_i}{\partial t} = -V_i \nabla p_i + V_i \mu\> \nabla^2\textbf{v} + V_i \textbf{f}
+\end{equation*}
+
+The right hand side of \eqref{eq:forces_eq} are the forces acting on
+particle i due to pressure of neighbouring particles, shear force due
+to relative motion between neighbouring particles, and the third term
+is the body force. Here there is a clear advantage of particle approach,
+suppose in future if one has to apply surface tension between particles,
+or force due to solid body immersed in fluid, or due to porous media,
+one could simply add the force term to this equation \eqref{eq:forces_eq}.
+
+
+After computing the forces on each particle, respective accelerations are calculated
+from the following
+
+\begin{equation*}
+  \label{eq:total_force}
+    \textbf{F}_i = \textbf{F}_{i}^{Pressure} + \textbf{F}_{i}^{viscous} + \textbf{F}_{i}^{additional}
+\end{equation*}
+
+\begin{equation}
+  \label{eq:acceleration}
+    \textbf{a}_i = \frac{\textbf{F}_i}{m_i}
+\end{equation}
+
+By using appropriate integration schemes like RK2, Euler, Prediction
+correction algorithms the system is moved forward by computing
+velocity and position of the particles at every time step by using
+acceleration computed from \eqref{eq:acceleration}
+
+
+As discussed previously in order to compute the pressure force we need
+additional equations to solve for pressure computations. Since in the
+present work we deal with WCSPH, pressure is directly related to
+density with Tait equation. From this one could infer that we need to
+solve for density at every time step. There are several ways to
+compute density in SPH, two methods are discussed in the next section.
+
+
+\section{Density computation}
+\label{sec:density_comp}
+
+Density of a fluid particle in SPH can be computed using many approaches, like
+
+\begin{itemize}
+\item Summation density
+\item Continuity equation
+\end{itemize}
+
+SPH way of density computing is using summation density. It is derived from basic
+function interpolation in SPH. It could be derived as follows.
+
+From \eqref{eq:summation_mass_rep} we have,
+
+\begin{equation*}
+  \label{eq:summation_mass_rep}
+  A_i = \sum\> \frac{m_j}{\rho_j} A_j\> W(i,j)
+\end{equation*}
+
+Where, $A_i$ is the property we are interested in. Here it is density,
+by substituting $A_i$ with $\rho_i$ we have
+
+\begin{align}
+  \label{eq:summation_mass_rep}
+    \rho_i &= \sum\> \frac{m_j}{\rho_j} \rho_j\> W(i,j) \nonumber \\
+    \rho_i &= \sum\> m_j \> W(i,j)
+\end{align}
+
+
+By using \eqref{eq:summation_mass_rep} one gets lower density values
+at the free surface of the fluid. This is due to lack of particle
+support. In order to prevent such thing, Shepard filter is applied.
+
+In the second approach from continuity equation the rate of change of
+density is calculated, through which the density at a time is
+computed.
+
+\begin{align}
+  \label{eq:continuity}
+    \frac{d\rho}{dt} = -\rho \nabla * \textbf{v}
+\end{align}
+
+\eqref{eq:continuity} is discretized in terms of particles and written
+in summation form as follows
+
+\begin{align}
+  \label{eq:sph_continuity}
+    \frac{d\rho_a}{dt} = \sum_{b}m_b \textbf{v}_{ab} * \nabla_a W_{ab}
+\end{align}
+
+Once density of the field is calculated, the corresponding pressure is computed using
+Tait equations, which is described in next section.
+
+
+\section{Pressure computation}
+
+Since the fluid is slightly compressible, one can relate pressure with density
+of fluid. The reason for considering the fluid to be slightly compressible is because,
+if the flow in incompressible, one has to solve for pressure Poisson equation in order to
+compute the pressure of the fluid particle, which is quite computationally expensive.
+By considering the flow as compressible such time consuming computation could be reduced.
+
+Pressure and density could be related with two equations, they are, the ideal gas equation
+and Tait equation. In the present work Tait equation of state is used. Tait equation of
+state is given as
+
+\begin{align}
+  \label{eq:pressure}
+  p_i = \frac{\rho_0 c_s^2 }{\gamma} \bigg(\bigg(\frac{\rho}{\rho_0}\bigg)^\gamma - 1 \bigg)
+\end{align}
+
+where c_s is the maximum speed of sound inside the fluid, $\rho_0$ is
+the rest density of the fluid and gamma is the polytropic constant.
+\eqref{eq:pressure} is extended to handle low density situations as in
+free surface flows and near particle leaking. In low density regions
+where density of the fluid is less than the fluid density we have
+negative pressure which leads to cohesion force rather than repulsive,
+which is not entertained. In order to prevent such attraction hg
+correction is applied to the equation \eqref{eq:pressure} The corrected
+pressure equation is termed to be HG correction.
+
+
+
+
+
 In SPH, the fluid is discretized into particles, contrast to euerian
 grid based scemes. The physical properties of the fluid are obtained
 at the particle, where as in eulerian frameworks, the properties are
 calcualted at locations.
-
-Further, physical quantities of a particle are computed by weighted
-average of neighbouring particles using appropriate kernels. In SPH,
-the integral representation of a field variable A at location $x_i$ is
-defined as
-
-\begin{equation}
-  \label{eq:integral_rep}
-  A(x_i) = \int\> A(x_j) \>W(x_i - x_j, h)
-\end{equation}
-
-Where W is a kernel function. $dx_{j}$ is the volume of the particle
-situated at $x_j$. Here W is like a weighted factor for the
-contributions from the neighbourhood interpolation points.
-
-Solving \eqref{eq:integral_rep} numerically, needs to discretize the
-domain into particles. Now changing the integral representation to
-summation form interms of the discretized points, gives us
-
-\begin{equation}
-  \label{eq:summation_rep}
-  A_i = \sum\> A_j\> W(i,j)\>\> V_j
-\end{equation}
-
-Here $V_j$ is the volume of particle j, and $A_j$ is the interpolated
-property of particle j.
-
-\eqref{eq:summation_rep} can also be written interms of mass of the particle j
-as
-
-\begin{equation}
-  \label{eq:summation_mass_rep}
-  A_i = \sum\> \frac{m_j}{\rho_j} A_j\> W(i,j)
-\end{equation}
-
-Similarly the derivative of a field property can be written, interms
-of derivative of kernel function, rather than the derivative of field
-property as follows
 
 
 \section{Smoothing kernels}
@@ -124,15 +345,39 @@ by substituting $A_i$ with $\rho_i$ we have
 \end{align}
 
 
+By using \eqref{eq:summation_mass_rep} one gets lower density values
+at the free surface of the fluid. This is due to lack of particle
+support. In order to prevent such thing, Shepard filter is applied.
 
-% $$ \frac{d\rho}{dt} = -\rho \nabla * \textbf{v}$$
-% <br />
+In the second approach from continuity equation the rate of change of
+density is calculated, through which the density at a time is
+computed.
 
-% Discretized equations:
-% ----------------------
-% $$ \frac{d\rho_a}{dt} = \sum_{b}m_b \textbf{v}_{ab} * \nabla_a W_{ab}$$
-% <br />
-% $$ \frac{d\textbf{v}_a}{dt} = \textbf{g}_a  -\sum_{b}m_b \Bigg(\frac{p_a}{\rho^2_a} + \frac{p_b}{\rho^2_b}\Bigg) \nabla_a W_{ab}$$
+\begin{align}
+  \label{eq:continuity}
+    \frac{d\rho}{dt} = -\rho \nabla * \textbf{v}
+\end{align}
+
+\eqref{eq:continuity} is discretized in terms of particles and written
+in summation form as follows
+
+\begin{align}
+  \label{eq:sph_continuity}
+    \frac{d\rho_a}{dt} = \sum_{b}m_b \textbf{v}_{ab} * \nabla_a W_{ab}
+\end{align}
+
+In the present work WCSPH scheme is used. In WCSPH scheme the flow is
+considered to be weakly compressible, which means there could be a variation
+in the density of the fluid flow. And the pressure is directly related to density
+of the particle by Tait's equation. Once the pressure of each particle is computed, the
+resulting forces on a particle due to its neighbours is calculated by the following equation.
+
+\begin{align}
+  \label{eq:sph_momentum}
+    \frac{d\textbf{v}_a}{dt} = \textbf{g}_a  -\sum_{b}m_b \Bigg(\frac{p_a}{\rho^2_a} + \frac{p_b}{\rho^2_b}\Bigg) \nabla_a W_{ab}
+\end{align}
+
+Where $p_a$ is the pressure of the
 
 % Pressure equation:
 % ----------------------------------------------
@@ -140,3 +385,6 @@ by substituting $A_i$ with $\rho_i$ we have
 % The relationship between pressure and density of a particle is given by
 
 % $$ p_a = B \Bigg[\Bigg(\frac{\rho_a}{\rho_0}\Bigg)^\gamma - 1 \Bigg] $$
+
+% LocalWords:  Tait polytropic Navier eq dirac repr kh discretized dv
+% LocalWords:  dt RK WCSPH
