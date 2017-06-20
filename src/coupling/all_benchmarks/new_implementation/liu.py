@@ -18,7 +18,7 @@ from pysph.solver.utils import get_files, iter_output
 from pysph.sph.equation import Group
 from pysph.sph.basic_equations import (XSPHCorrection, ContinuityEquation,
                                        SummationDensity)
-from pysph.sph.wc.basic import TaitEOSHGCorrection, MomentumEquation
+from pysph.sph.wc.basic import TaitEOSHGCorrection, MomentumEquation, TaitEOS
 from pysph.solver.application import Application
 from pysph.sph.rigid_body import (BodyForce, RigidBodyCollision,
                                   SolidFluidForce, LiuFluidForce,
@@ -31,20 +31,20 @@ def create_boundary():
     dx = 2
 
     # bottom particles in tank
-    xb = np.arange(-2*dx, 140+2*dx, dx)
+    xb = np.arange(-2*dx, 150+2*dx, dx)
     yb = np.arange(-2*dx, 0, dx)
     xb, yb = np.meshgrid(xb, yb)
     xb = xb.ravel()
     yb = yb.ravel()
 
     xl = np.arange(-2*dx, 0, dx)
-    yl = np.arange(0, 150, dx)
+    yl = np.arange(0, 140, dx)
     xl, yl = np.meshgrid(xl, yl)
     xl = xl.ravel()
     yl = yl.ravel()
 
-    xr = np.arange(140, 140+2*dx, dx)
-    yr = np.arange(0, 150, dx)
+    xr = np.arange(150, 150+2*dx, dx)
+    yr = np.arange(0, 140, dx)
     xr, yr = np.meshgrid(xr, yr)
     xr = xr.ravel()
     yr = yr.ravel()
@@ -59,18 +59,13 @@ def create_fluid():
     dx = 2
     # xf = np.arange(dx/2., 140-dx/2., dx)
     # yf = np.arange(dx/2., 130+dx/2., dx)
-    xf = np.arange(0, 140, dx)
-    yf = np.arange(0, 130, dx)
-    xf, yf = np.meshgrid(xf, yf)
-    xf = xf.ravel()
-    yf = yf.ravel()
-    xf = np.arange(0, 140, dx)
-    yf = np.arange(0, 130, dx)
+    xf = np.arange(0, 150, dx)
+    yf = np.arange(0, 52, dx)
     xf, yf = np.meshgrid(xf, yf)
     xf = xf.ravel()
     yf = yf.ravel()
 
-    p = (xf > 59) & (xf < 81) & (yf > 119)
+    p = (xf > 49) & (xf < 101) & (yf > 11) & (yf < 37)
 
     xf = xf[~p]
     yf = yf[~p]
@@ -79,8 +74,8 @@ def create_fluid():
 
 
 def create_cube(dx=1):
-    x = np.arange(60, 80, dx)
-    y = np.arange(121, 141, dx)
+    x = np.arange(50, 100, dx)
+    y = np.arange(12, 36, dx)
     x, y = np.meshgrid(x, y)
     x = x.ravel()
     y = y.ravel()
@@ -121,7 +116,7 @@ class FluidStructureInteration(Application):
         self.dx = 2 * 1e-3
         self.hdx = 1.2
         self.ro = 1000
-        self.solid_rho = 500
+        self.solid_rho = 2120
         self.m = 1000 * self.dx * self.dx
         self.co = 2 * np.sqrt(2 * 9.81 * 130 * 1e-3)
         self.alpha = 0.1
@@ -230,7 +225,7 @@ class FluidStructureInteration(Application):
 
 
 if __name__ == '__main__':
-    app = FluidStructureInteration()
-    app.run()
+    # app = FluidStructureInteration()
+    # app.run()
     # app.post_processing()
-    # geometry()
+    geometry()
