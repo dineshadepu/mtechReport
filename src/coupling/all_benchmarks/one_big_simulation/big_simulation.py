@@ -215,7 +215,7 @@ class FluidStructureInteration(Application):
                                                    name="small_tank")
 
         xc, yc = create_outside_cube()
-        yc = yc + 0.1
+        yc = yc + 0.15
         m = np.ones_like(xc) * self.wood_rho * dx * 1e-3 * dx * 1e-3
         rho = np.ones_like(xc) * self.wood_rho
         h = np.ones_like(xc) * self.hdx * self.dx
@@ -232,7 +232,8 @@ class FluidStructureInteration(Application):
         integrator = EPECIntegrator(fluid=WCSPHStep(), big_tank=WCSPHStep(),
                                     cube=RK2StepRigidBody(),
                                     wood=RK2StepRigidBody(),
-                                    small_tank=RK2StepRigidBody())
+                                    small_tank=RK2StepRigidBody(),
+                                    outside=RK2StepRigidBody())
 
         dt = 0.125 * self.dx * self.hdx / (self.co * 1.1) / 2.
         print("DT: %s" % dt)
@@ -254,10 +255,13 @@ class FluidStructureInteration(Application):
                     BodyForce(dest='cube', sources=None, gy=-9.81),
                     BodyForce(dest='wood', sources=None, gy=-9.81),
                     BodyForce(dest='small_tank', sources=None, gy=-9.81),
+                    BodyForce(dest='outside', sources=None, gy=-9.81),
                     SummationDensity(dest='cube', sources=['fluid', 'cube']),
                     SummationDensity(dest='wood', sources=['fluid', 'wood']),
                     SummationDensity(dest='small_tank', sources=['fluid',
-                                                                 'small_tank'])
+                                                                 'small_tank']),
+                    SummationDensity(dest='outside', sources=['fluid',
+                                                                 'outside'])
                     # NumberDensity(dest='cube', sources=['cube']),
                 ],
                 real=False),
@@ -274,16 +278,18 @@ class FluidStructureInteration(Application):
                                     c0=self.co, gamma=7.0),
                 TaitEOSHGCorrection(dest='small_tank', sources=None,
                                     rho0=self.wood_rho, c0=self.co, gamma=7.0),
+                TaitEOSHGCorrection(dest='outside', sources=None, rho0=self.ro,
+                                    c0=self.co, gamma=7.0),
             ], real=False),
             Group(equations=[
                 ContinuityEquation(
                     dest='fluid',
                     sources=['fluid', 'small_tank', 'cube', 'wood',
-                    'big_tank'], ),
+                             'big_tank', 'outside'], ),
                 ContinuityEquation(
                     dest='big_tank',
                     sources=['fluid', 'big_tank', 'cube', 'wood',
-                             'small_tank'],),
+                             'small_tank', 'outside'],),
 
                 MomentumEquation(dest='fluid', sources=['fluid', 'big_tank'],
                                  alpha=self.alpha, beta=0.0, c0=self.co,
@@ -291,33 +297,41 @@ class FluidStructureInteration(Application):
                 LiuFluidForce(dest='fluid', sources=['cube'], ),
                 LiuFluidForce(dest='fluid', sources=['wood'], ),
                 LiuFluidForce(dest='fluid', sources=['small_tank'], ),
+                LiuFluidForce(dest='fluid', sources=['outside'], ),
                 # PressureRigidBody(dest='fluid', sources=['cube'],
                 #                   rho0=1500),
                 XSPHCorrection(dest='fluid', sources=['fluid', 'big_tank']),
             ]),
             Group(equations=[
                 RigidBodyCollision(dest='cube', sources=['big_tank', 'wood',
-                                                         'small_tank'],
+                                                         'small_tank', 'outside'],
                                    kn=1e6)
             ]),
             Group(equations=[RigidBodyMoments(dest='cube', sources=None)]),
             Group(equations=[RigidBodyMotion(dest='cube', sources=None)]),
             Group(equations=[
                 RigidBodyCollision(dest='wood', sources=['big_tank', 'cube',
-                                                         'small_tank'], kn=1e6)
+                                                         'small_tank', 'outside'], kn=1e6)
             ]),
             Group(equations=[RigidBodyMoments(dest='wood', sources=None)]),
             Group(equations=[RigidBodyMotion(dest='wood', sources=None)]),
 
             Group(equations=[
                 RigidBodyCollision(dest='small_tank',
-                                   sources=['big_tank', 'cube', 'wood'],
+                                   sources=['big_tank', 'cube', 'wood', 'outside'],
                                    kn=1e6)
             ]),
             Group(equations=[RigidBodyMoments(dest='small_tank',
                                               sources=None)]),
             Group(equations=[RigidBodyMotion(dest='small_tank',
                                              sources=None)]),
+
+            Group(equations=[
+                RigidBodyCollision(dest='outside', sources=['big_tank', 'cube',
+                                                            'small_tank', 'wood'], kn=1e6)
+            ]),
+            Group(equations=[RigidBodyMoments(dest='outside', sources=None)]),
+            Group(equations=[RigidBodyMotion(dest='outside', sources=None)]),
         ]
         return equations
 
