@@ -1,9 +1,11 @@
 """Oblique impact of a sphere with a rigid plane with a
    constant resultant velocity but at different incident angle
+   Do pfreq = 1000
 
 Check the complete molecular dynamics code
 """
 from __future__ import print_function
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -13,12 +15,17 @@ from pysph.base.kernels import CubicSpline
 
 from pysph.solver.solver import Solver
 from pysph.sph.integrator import EPECIntegrator
+from pysph.solver.utils import get_files, iter_output
 from pysph.sph.integrator_step import DEMStep
 
 from pysph.sph.equation import Group
 from pysph.sph.molecular_dynamics import (LinearSpringForceParticleParticle,
+                                          HertzSpringForceParticleWall,
                                           MakeForcesZero, BodyForce)
 from pysph.solver.application import Application
+
+# thet = sys.argv[1]
+thet = 80
 
 
 def add_properties(pa, *props):
@@ -39,40 +46,42 @@ class FluidStructureInteration(Application):
         self.dx = 1
         self.rho = 4000
         self.r = 0.0025
-        _m = np.pi * 2 * self.r * 2 * self.r * self.rho
+        _m = 4. / 3. * np.pi * self.r * self.r * self.r * self.rho
         self.m_eff = (_m + _m) / (_m * _m)
 
     def create_particles(self):
         x = np.array([0.0])
-        y = np.array([0.005])
+        y = np.array([0.003])
+        x = np.array([0.0])
         r = 0.0025
         R = np.ones_like(x) * r
-        _m = np.pi * 2 * r * 2 * r * 4000
+        _m = 4. / 3. * np.pi * self.r * self.r * self.r * self.rho
         m = np.ones_like(x) * _m
         m_inverse = np.ones_like(x) * 1. / _m
-        _I = _m * r**2
+        _I = 2. / 5. * _m * r**2
         I_inverse = np.ones_like(x) * 1. / _I
-        h = np.ones_like(x) * r
+        h = np.ones_like(x) * 10
+        E = np.ones_like(x) * 3.8 * 1e11
+        nu = np.ones_like(x) * 0.23
 
         # velocity assigning
         Vmag = 3.9
-        theta = 80 * np.pi / 180.
+        # thet = 40
+        theta = thet * np.pi / 180.
         u = Vmag * np.sin(theta) * np.ones_like(x)
         v = -Vmag * np.cos(theta) * np.ones_like(x)
 
-        sand = get_particle_array_dem(x=x, y=y, u=u, v=v, m=m,
+        sand = get_particle_array_dem(x=x, y=y, u=u, v=v, m=m, E=E, nu=nu,
                                       m_inverse=m_inverse, R=R, h=h,
                                       I_inverse=I_inverse, name="sand")
 
-        x, y = create_wall(r)
-        mw = np.ones_like(x) * _m
-        m_inverse = np.ones_like(x) * 1. / _m
+        x, y = np.asarray([0]), np.asarray([0])
+        nx, ny = np.asarray([0]), np.asarray([1])
         R = np.ones_like(x) * r
-        h = np.ones_like(x) * r
-        _I = _m * r**2
-        I_inverse = np.ones_like(x) * 1. / _I
-        wall = get_particle_array_dem(x=x, y=y, m=mw, m_inverse=m_inverse, R=R,
-                                      h=h, I_inverse=I_inverse, name="wall")
+        h = np.ones_like(x) * 10
+        wall = get_particle_array_dem(x=x, y=y, E=E, nu=nu,
+                                      nx=nx, ny=ny,
+                                      h=h,  name="wall")
 
         # additional properties for equations
         # self.m_eff = (_m + mw[0]) / (_m * mw[0])
@@ -83,11 +92,11 @@ class FluidStructureInteration(Application):
 
         integrator = EPECIntegrator(sand=DEMStep())
 
-        dt = 1e-6
+        dt = 1e-7
         print("DT: %s" % dt)
-        tf = 0.0076
+        tf = 0.0015
         solver = Solver(kernel=kernel, dim=2, integrator=integrator, dt=dt,
-                        tf=tf, adaptive_timestep=False)
+                        tf=tf, adaptive_timestep=False, pfreq=2000)
 
         return solver
 
@@ -95,14 +104,29 @@ class FluidStructureInteration(Application):
         equations = [
             Group(equations=[
                 BodyForce(dest='sand', sources=None, gy=-9.81),
-                LinearSpringForceParticleParticle(
-                    dest='sand', sources=['sand', 'wall'], k=1e6,
-                    ln_e=abs(np.log(0.98)), m_eff=self.m_eff, mu=.092),
+                HertzSpringForceParticleWall(
+                    dest='sand', sources=['wall'],
+                    ln_e=abs(np.log(0.98)),  mu=.092),
+                # LinearSpringForceParticleParticle(
+                #     dest='sand', sources=['wall'],
+                #     ln_e=abs(np.log(0.98)), m_eff=self.m_eff, mu=.092),
                 # MakeForcesZero(dest='sand', sources=None)
             ]),
         ]
         return equations
 
+    def post_processing(self):
+        files = get_files('test_4_output')
+        t = []
+        y1 = []
+        for solver_data, sand, wall in iter_output(files, 'sand', 'wall'):
+            t.append(solver_data['t'])
+            y1.append(sand.wz[0])
+        print("Done")
+        target = open('output.txt', 'a+')
+        target.write(str(y1[-1]))
+        target.close()
+        print(y1[-1])
     # def pre_step(self, solver):
     #     solver.dump_output()
 
@@ -110,6 +134,7 @@ class FluidStructureInteration(Application):
 if __name__ == '__main__':
     app = FluidStructureInteration()
     app.run()
+    app.post_processing()
     # x, y = create_hopper(0.1)
     # x, y = create_fluid()
     # xc, yc, indices = create_cube()
